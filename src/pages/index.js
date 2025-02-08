@@ -1,128 +1,144 @@
-import * as React from "react"
-import { Link } from "gatsby"
-import { StaticImage } from "gatsby-plugin-image"
+import * as React from "react";
+import { useState, useEffect } from "react";
+import Layout from "../components/layout";
+import Seo from "../components/seo";
+import "../styles/style.css";
+import { FaLinkedin, FaGithub, FaFileAlt, FaOrcid, FaRegNewspaper, FaRegFile} from "react-icons/fa";
 
-import Layout from "../components/layout"
-import Seo from "../components/seo"
-import * as styles from "../components/index.module.css"
-
+// Array of links for professional resources
 const links = [
   {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
+    text: "LinkedIn",
+    url: "https://www.linkedin.com/in/ihecker",
+    icon: <FaLinkedin />,
   },
   {
-    text: "Examples",
-    url: "https://github.com/gatsbyjs/gatsby/tree/master/examples",
-    description:
-      "A collection of websites ranging from very basic to complex/complete that illustrate how to accomplish specific tasks within your Gatsby sites.",
+    text: "GitHub",
+    url: "https://github.com/ihecker",
+    icon: <FaGithub />,
   },
   {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Learn how to add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
+    text: "CV",
+    url: "/CV_EN.pdf", // Use the path relative to the public folder
+    icon: <FaFileAlt />,
   },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-  },
-]
+];
 
-const samplePageLinks = [
-  {
-    text: "Page 2",
-    url: "page-2",
-    badge: false,
-    description:
-      "A simple example of linking to another page within a Gatsby site",
-  },
-  { text: "TypeScript", url: "using-typescript" },
-  { text: "Server Side Rendering", url: "using-ssr" },
-  { text: "Deferred Static Generation", url: "using-dsg" },
-]
+const IndexPage = () => {
+  const [heights, setHeights] = useState([20, 20, 20, 20]);
+  const [publications, setPublications] = useState([]); 
 
-const moreLinks = [
-  { text: "Join us on Discord", url: "https://gatsby.dev/discord" },
-  {
-    text: "Documentation",
-    url: "https://gatsbyjs.com/docs/",
-  },
-  {
-    text: "Starters",
-    url: "https://gatsbyjs.com/starters/",
-  },
-  {
-    text: "Showcase",
-    url: "https://gatsbyjs.com/showcase/",
-  },
-  {
-    text: "Contributing",
-    url: "https://www.gatsbyjs.com/contributing/",
-  },
-  { text: "Issues", url: "https://github.com/gatsbyjs/gatsby/issues" },
-]
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const newHeights = heights.map(() => Math.random() * 80 + 20);
+      setHeights(newHeights);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, [heights]);
 
-const utmParameters = `?utm_source=starter&utm_medium=start-page&utm_campaign=default-starter`
+  // Fetch ORCID publications and other available data
+  useEffect(() => {
+    const fetchPublications = async () => {
+      try {
+        const response = await fetch('https://pub.orcid.org/v3.0/0000-0002-5707-2799/works', {
+          headers: { Accept: 'application/json' }
+        });
+        const data = await response.json();
 
-const IndexPage = () => (
-  <Layout>
-    <div className={styles.textCenter}>
-      <StaticImage
-        src="../images/example.png"
-        loading="eager"
-        width={64}
-        quality={95}
-        formats={["auto", "webp", "avif"]}
-        alt=""
-        style={{ marginBottom: `var(--space-3)` }}
-      />
-      <h1>
-        Welcome to <b>Gatsby!</b>
-      </h1>
-      <p className={styles.intro}>
-        <b>Example pages:</b>{" "}
-        {samplePageLinks.map((link, i) => (
-          <React.Fragment key={link.url}>
-            <Link to={link.url}>{link.text}</Link>
-            {i !== samplePageLinks.length - 1 && <> · </>}
-          </React.Fragment>
-        ))}
-        <br />
-        Edit <code>src/pages/index.js</code> to update this page.
-      </p>
-    </div>
-    <ul className={styles.list}>
-      {links.map(link => (
-        <li key={link.url} className={styles.listItem}>
-          <a
-            className={styles.listItemLink}
-            href={`${link.url}${utmParameters}`}
-          >
-            {link.text} ↗
-          </a>
-          <p className={styles.listItemDescription}>{link.description}</p>
-        </li>
-      ))}
-    </ul>
-    {moreLinks.map((link, i) => (
-      <React.Fragment key={link.url}>
-        <a href={`${link.url}${utmParameters}`}>{link.text}</a>
-        {i !== moreLinks.length - 1 && <> · </>}
-      </React.Fragment>
-    ))}
-  </Layout>
-)
+        const works = data.group.map(group => {
+          const work = group['work-summary'][0];
 
-/**
- * Head export to define metadata for the page
- *
- * See: https://www.gatsbyjs.com/docs/reference/built-in-components/gatsby-head/
- */
-export const Head = () => <Seo title="Home" />
+          return {
+            title: work.title.title.value,
+            journal: work['journal-title']?.value || 'Unknown',
+            year: work['publication-date']?.year?.value || 'Unknown',
+            doi: work['url']?.value || 'Unknown', 
+          };
+        });
 
-export default IndexPage
+        setPublications(works); 
+      } catch (error) {
+        console.error('Error fetching publications:', error);
+      }
+    };
+
+    fetchPublications();
+  }, []); 
+
+  return (
+    <Layout>
+      <div className="main-content">
+        <div className="textCenter">
+
+          {/* Title with animated bar background */}
+          <div className="title-container">
+            <h1 className="title">Portfolio</h1>
+            <div className="bar-chart">
+              {heights.map((height, index) => (
+                <div
+                  key={index}
+                  className="bar"
+                  style={{ height: `${height}%` }}
+                ></div>
+              ))}
+            </div>
+          </div>
+
+          <p className="intro">
+            {links.map((link, i) => (
+              <React.Fragment key={link.url}>
+                <a href={link.url} className="link">
+                  {link.icon} {link.text}
+                </a>
+                {i !== links.length - 1 && <> · </>}
+              </React.Fragment>
+            ))}
+          </p>
+
+          {/* Publications Section */}
+          <div className="publicationsTitle">
+            <h2>
+              <FaRegNewspaper /> Scientific publications 
+              <a
+                href="https://orcid.org/0000-0002-5707-2799"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="orcid-logo"
+              > 
+                 < FaOrcid />
+              </a>
+            </h2>
+            <div className="publications">
+              <ul>
+                {publications.length > 0 ? (
+                  publications.map((pub, index) => (
+                    <li key={index}>
+                      <a href={pub.doi}>
+                      <FaRegFile style={{ marginRight: '8px' }} /> {/* Use FaRegFile as bullet */}
+                        <strong>{pub.title}</strong>
+                      </a>{" "}
+                      ({pub.year}) - {pub.journal}
+                    </li>
+                  ))
+                ) : (
+                  <li>No publications found.</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <footer className="footer">
+        <p>
+          © {new Date().getFullYear()} Irwin Hecker. Built with ❤️ and{" "}
+          <a href="https://www.gatsbyjs.com">Gatsby</a>.
+        </p>
+      </footer>
+    </Layout>
+  );
+};
+
+export const Head = () => <Seo title="Home" />;
+
+export default IndexPage;

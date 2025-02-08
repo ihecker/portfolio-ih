@@ -1,54 +1,59 @@
+:root {
+  /* Define our color palette and spacing variables */
+  --color-primary: #953735;   /* Auburn as primary accent */
+  --color-text: #ffffff;      /* White text */
+  --size-gap: 20px;           /* Gap between grid items */
+  --space-1: 10px;            /* Spacing unit */
+  --line-height-loose: 1.5;   /* Loose line-height for readability */
+  --w: 280px;                /* Minimum width for grid items */
+  --n: 2;                    /* Fallback number for grid calculation */
+}
+
+/* Grid list for displaying items */
 .list {
   display: grid;
   margin: 0;
-  /* https://css-tricks.com/responsive-layouts-fewer-media-queries/ */
-  --w: 280px;
-  --n: 2;
   gap: var(--size-gap);
   grid-template-columns: repeat(
     auto-fit,
-    minmax(max(var(--w), 100%/ (var(--n) + 1) + 0.1%), 1fr)
+    minmax(max(var(--w), calc(100% / (var(--n) + 1) + 0.1%)), 1fr)
   );
-  margin-bottom: var(--size-gap);
   margin-top: var(--size-gap);
+  margin-bottom: var(--size-gap);
 }
 
+/* List item with no extra margin */
 .listItem {
   margin: 0;
 }
 
+/* Set marker color to match primary accent */
 .listItem::marker {
-  color: #e95800;
+  color: var(--color-primary);
 }
 
-.listItem:nth-child(2)::marker {
-  color: #159bf3;
-}
-
-.listItem:nth-child(3)::marker {
-  color: #8eb814;
-}
-
-.listItem:nth-child(4)::marker {
-  color: #663399;
-}
-
+/* Links inside list items: use primary accent, bold weight, and no underline */
 .listItemLink {
   color: var(--color-primary);
   font-weight: bold;
+  text-decoration: none;
 }
 
+/* Description text: white, with a small margin at the top */
 .listItemDescription {
   color: var(--color-text);
-  margin-bottom: 0;
   margin-top: var(--space-1);
+  margin-bottom: 0;
 }
 
+/* Centering text in designated areas */
 .textCenter {
   text-align: center;
 }
 
+/* Intro text with a loose line-height for readability */
 .intro {
   max-width: none;
   line-height: var(--line-height-loose);
 }
+

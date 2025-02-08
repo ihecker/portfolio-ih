@@ -1,0 +1,283 @@
+:root {
+  --color-primary: #953735;
+  --color-text: #ffffff;
+  --size-gap: 20px;
+  --space-1: 10px;
+  --line-height-loose: 1.5;
+  --w: 280px;
+  --n: 2;
+}
+
+.list {
+  display: grid;
+  margin: 0;
+  gap: var(--size-gap);
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(max(var(--w), calc(100% / (var(--n) + 1) + 0.1%)), 1fr)
+  );
+  margin-top: var(--size-gap);
+  margin-bottom: var(--size-gap);
+}
+
+.listItem {
+  margin: 0;
+}
+
+.listItem::marker {
+  color: var(--color-primary);
+}
+
+.listItemLink {
+  color: var(--color-primary);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.listItemDescription {
+  color: var(--color-text);
+  margin-top: var(--space-1);
+  margin-bottom: 0;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.intro {
+  max-width: none;
+  line-height: var(--line-height-loose);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  background: linear-gradient(45deg, #184454, black);
+  background-size: 400% 400%;
+  animation: gradientAnimation 180s ease infinite;
+  font-family: 'Garamond', sans-serif;
+}
+
+@keyframes gradientAnimation {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+h1 {
+  font-family: 'Verdana', sans-serif;
+  font-size: 3em;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+a {
+  color: #ffffff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #953735;
+}
+
+p {
+  color: #ffffff;
+  font-size: 1.2em;
+  line-height: 1.5;
+}
+
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+  text-align: match-parent;
+  color: white;
+  font-size: 1.0em;
+  opacity: 0.8;
+  margin-top: auto;
+}
+
+.typing-effect {
+  font-family: "Courier New", monospace;
+  overflow: hidden;
+  white-space: nowrap;
+  display: inline-block;
+  border-right: 2px solid white;
+  animation: typing 3s steps(30) 1s forwards, blink-cursor 0.75s step-end infinite;
+}
+
+@keyframes blink-cursor {
+  50% { border-color: transparent; }
+}
+
+.title-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 40px;
+}
+
+.title {
+  position: relative;
+  z-index: 1;
+  font-size: 3em;
+  color: white;
+  text-align: center;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+}
+
+.bar-chart {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+  height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  z-index: 0;
+}
+
+.bar {
+  width: 20%;
+  background: linear-gradient(135deg, #004953, #a52a2a);
+  transition: height 2s ease-in-out;
+  border-radius: 5px;
+}
+
+.publication-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 16px;
+  max-width: 300px;
+  text-align: center;
+  margin: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.publication-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.publication-content h3 {
+  font-size: 1.2rem;
+  margin: 8px 0;
+}
+
+.publication-content a {
+  color: #007acc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.publications {
+  text-decoration: none;
+  margin-top: 20px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  max-height: 300px;
+  overflow-y: auto;
+  font-size: 0.7rem;
+}
+
+.publicationsTitle h2 {
+  font-family: 'Verdana', sans-serif;
+  font-size: 1.8em;
+  color: #953735;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.publications h2 {
+  text-decoration: none;
+  font-size: 0.5rem;
+  margin-bottom: 10px;
+}
+
+.publications ul {
+  text-decoration: none;
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.publications li {
+  text-decoration: none;
+  margin-bottom: 6px;
+  font-size: 1rem;
+  line-height: 1.4;
+  text-align: justify;
+}
+
+.orcid-logo {
+  margin-left: 2px;
+  color: white;
+  font-size: 0.5em;
+  transition: color 0.3s ease;
+}
+
+.orcid-logo:hover {
+  color: #953735;
+}
+
+.publications a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.publications a:hover {
+  color: #953735;
+}
+
+.publications-title {
+  position: relative;
+  display: inline-block;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes underlineAnimation {
+  0% { border-width: 0%; width: 100%; }
+  50% { border-width: 100%; width: 80%; }
+  100% { border-width: 0%; width: 100%; }
+}
+
+h2 {
+  font-size: 0.8rem;
+  border-bottom: 2px solid #953735;
+  padding-bottom: 5px;
+  display: inline-block;
+  animation: underlineAnimation infinite 12s;
+}
+
+.publications::-webkit-scrollbar {
+  width: 12px;
+}
+
+.publications::-webkit-scrollbar-thumb {
+  background-color: lightgrey;
+  border-radius: 10px;
+  border: 1px solid white;
+}
+
+.publications::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.publications::-webkit-scrollbar-thumb:hover {
+  background-color: #953735;
+}
