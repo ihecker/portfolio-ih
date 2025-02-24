@@ -3,7 +3,14 @@ import { useState, useEffect } from "react";
 import Layout from "../components/layout";
 import Seo from "../components/seo";
 import "../styles/style.css";
-import { FaLinkedin, FaGithub, FaFileAlt, FaOrcid, FaRegNewspaper, FaRegFile} from "react-icons/fa";
+import {
+  FaLinkedin,
+  FaGithub,
+  FaFileAlt,
+  FaOrcid,
+  FaRegNewspaper,
+  FaRegFile,
+} from "react-icons/fa";
 
 // Array of links for professional resources
 const links = [
@@ -19,14 +26,70 @@ const links = [
   },
   {
     text: "CV",
-    url: "/CV_EN.pdf", // Use the path relative to the public folder
+    url: "/CV_EN.pdf",
     icon: <FaFileAlt />,
+  },
+];
+
+const featured = [
+  {
+    name: "lantrn",
+    description: "My R package! Functions for workflow efficiency",
+    image: "lantrn_image.png",
+    link: "https://github.com/ihecker/lantrn",
+    tags: ["R", "Package"],
+  },
+  {
+    name: "ShinyRtisan",
+    description: "My Shiny app! Explore R/Shiny customizations",
+    image: "rtisan_image.png",
+    link: "https://ihecker.shinyapps.io/ShinyRtisan/",
+    tags: ["Shiny", "Web App"],
+  },
+];
+
+const projects = [
+  {
+    name: "Porfolio",
+    description: "The code behind this portfolio!",
+    image: "portfolio_image.png",
+    link: "https://github.com/ihecker/portfolio-ih",
+    tags: ["ReactJS", "Web App"],
+  },
+  {
+    name: "RESPOND project",
+    description:
+      "Reduce mental health concerns resulting from the COVID-19 pandemic",
+    image: "respond_image.png",
+    link: "https://respond-project.eu/",
+    tags: ["R", "Coordination"],
+  },
+  {
+    name: "COVerAGE database",
+    description: "Global demographic database of COVID-19",
+    image: "coverage_image.png",
+    link: "https://www.coverage-db.org/",
+    tags: ["R", "Data Management"],
+  },
+  {
+    name: "Tableau Dashboard Preview",
+    description: "Extinct and Threatened Species Tracker",
+    image: "tableau_species_tracker_image.png",
+    link: "tableau_species_tracker_link.png",
+    tags: ["Tableau", "Data Visualization"],
+  },
+  {
+    name: "PowerBI Dashboard Preview",
+    description: "Top 10 Countries by COVID-19 Cases Overview",
+    image: "powerbi_dashboard_image.png",
+    link: "powerbi_dashboard_link.png",
+    tags: ["PowerBI", "Data Visualization"],
   },
 ];
 
 const IndexPage = () => {
   const [heights, setHeights] = useState([20, 20, 20, 20]);
-  const [publications, setPublications] = useState([]); 
+  const [publications, setPublications] = useState([]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -36,40 +99,41 @@ const IndexPage = () => {
     return () => clearInterval(interval);
   }, [heights]);
 
-  // Fetch ORCID publications and other available data
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch('https://pub.orcid.org/v3.0/0000-0002-5707-2799/works', {
-          headers: { Accept: 'application/json' }
-        });
+        const response = await fetch(
+          "https://pub.orcid.org/v3.0/0000-0002-5707-2799/works",
+          {
+            headers: { Accept: "application/json" },
+          }
+        );
         const data = await response.json();
 
-        const works = data.group.map(group => {
-          const work = group['work-summary'][0];
+        const works = data.group.map((group) => {
+          const work = group["work-summary"][0];
 
           return {
             title: work.title.title.value,
-            journal: work['journal-title']?.value || 'Unknown',
-            year: work['publication-date']?.year?.value || 'Unknown',
-            doi: work['url']?.value || 'Unknown', 
+            journal: work["journal-title"]?.value || "Unknown",
+            year: work["publication-date"]?.year?.value || "Unknown",
+            doi: work["url"]?.value || "Unknown",
           };
         });
 
-        setPublications(works); 
+        setPublications(works);
       } catch (error) {
-        console.error('Error fetching publications:', error);
+        console.error("Error fetching publications:", error);
       }
     };
 
     fetchPublications();
-  }, []); 
+  }, []);
 
   return (
     <Layout>
       <div className="main-content">
         <div className="textCenter">
-
           {/* Title with animated bar background */}
           <div className="title-container">
             <h1 className="title">Portfolio</h1>
@@ -95,17 +159,53 @@ const IndexPage = () => {
             ))}
           </p>
 
+          {/* Featured Section */}
+          <div className="projectsTitle">
+            <h2>Featured Projects in the Making</h2>
+            <div className="featuredGrid">
+              {featured.map((project, index) => (
+                <div key={index} className="featuredCard">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="featuredImage"
+                  />
+                  <div className="featuredContent">
+                    <h3>{project.name}</h3>
+                    <p>{project.description}</p>
+                    <div className="featuredTags">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Project
+                      </a>
+                    </div>
+                    <div className="tagsContainer">
+                      {project.tags.map((tag, i) => (
+                        <span key={i} className="featuredTag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Publications Section */}
           <div className="publicationsTitle">
             <h2>
-              <FaRegNewspaper /> Scientific publications 
+              <FaRegNewspaper /> Scientific publications
               <a
                 href="https://orcid.org/0000-0002-5707-2799"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="orcid-logo"
-              > 
-                 < FaOrcid />
+              >
+                <FaOrcid />
               </a>
             </h2>
             <div className="publications">
@@ -114,7 +214,8 @@ const IndexPage = () => {
                   publications.map((pub, index) => (
                     <li key={index}>
                       <a href={pub.doi}>
-                      <FaRegFile style={{ marginRight: '8px' }} /> {/* Use FaRegFile as bullet */}
+                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
+                        {/* Use FaRegFile as bullet */}
                         <strong>{pub.title}</strong>
                       </a>{" "}
                       ({pub.year}) - {pub.journal}
@@ -124,6 +225,42 @@ const IndexPage = () => {
                   <li>No publications found.</li>
                 )}
               </ul>
+            </div>
+          </div>
+
+          {/* Projects Section */}
+          <div className="projectsTitle">
+            <h2>Projects</h2>
+            <div className="projectsGrid">
+              {projects.map((project, index) => (
+                <div key={index} className="projectCard">
+                  <img
+                    src={project.image}
+                    alt={project.name}
+                    className="projectImage"
+                  />
+                  <div className="projectContent">
+                    <h3>{project.name}</h3>
+                    <p>{project.description}</p>
+                    <div className="projectTags">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Project
+                      </a>
+                    </div>
+                    <div className="tagsContainer">
+                      {project.tags.map((tag, i) => (
+                        <span key={i} className="projectTag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
         </div>
