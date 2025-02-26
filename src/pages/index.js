@@ -11,6 +11,13 @@ import {
   FaRegNewspaper,
   FaRegFile,
 } from "react-icons/fa";
+import lantrn_image from "../images/lantrn_image.png";
+import rtisan_image from "../images/rtisan_image.png";
+import portfolio_image from "../images/portfolio_image.png";
+import respond_image from "../images/respond_image.png";
+import coverage_image from "../images/coverage_image.png";
+import tableau_species_tracker_image from "../images/tableau_species_tracker_image.png";
+import powerbi_dashboard_image from "../images/powerbi_dashboard_image.png";
 
 // Array of links for professional resources
 const links = [
@@ -35,14 +42,14 @@ const featured = [
   {
     name: "lantrn",
     description: "My R package! Functions for workflow efficiency",
-    image: "/images/lantrn_image.png",
+    image: lantrn_image,
     link: "https://github.com/ihecker/lantrn",
     tags: ["R", "Package"],
   },
   {
     name: "ShinyRtisan",
     description: "My Shiny app! Explore R/Shiny customizations",
-    image: "/images/rtisan_image.png",
+    image: rtisan_image,
     link: "https://ihecker.shinyapps.io/ShinyRtisan/",
     tags: ["Shiny", "Web App"],
   },
@@ -52,7 +59,7 @@ const projects = [
   {
     name: "Porfolio",
     description: "The code behind this portfolio!",
-    image: "/images/portfolio_image.png",
+    image: portfolio_image,
     link: "https://github.com/ihecker/portfolio-ih",
     tags: ["ReactJS", "Web App"],
   },
@@ -60,28 +67,28 @@ const projects = [
     name: "RESPOND project",
     description:
       "Reduce mental health concerns resulting from the COVID-19 pandemic",
-    image: "/images/respond_image.png",
+    image: respond_image,
     link: "https://respond-project.eu/",
     tags: ["R", "Coordination"],
   },
   {
     name: "COVerAGE database",
     description: "Global demographic database of COVID-19",
-    image: "/images/coverage_image.png",
+    image: coverage_image,
     link: "https://www.coverage-db.org/",
     tags: ["R", "Data Management"],
   },
   {
     name: "Tableau Dashboard Preview",
     description: "Extinct and Threatened Species Tracker",
-    image: "/images/tableau_species_tracker_image.png",
+    image: tableau_species_tracker_image,
     link: "tableau_species_tracker_link.png",
     tags: ["Tableau", "Data Visualization"],
   },
   {
     name: "PowerBI Dashboard Preview",
     description: "Top 10 Countries by COVID-19 Cases Overview",
-    image: "/images/powerbi_dashboard_image.png",
+    image: powerbi_dashboard_image,
     link: "powerbi_dashboard_link.png",
     tags: ["PowerBI", "Data Visualization"],
   },
