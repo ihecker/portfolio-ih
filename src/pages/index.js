@@ -82,14 +82,14 @@ const projects = [
     name: "Tableau Dashboard Preview",
     description: "Extinct and Threatened Species Tracker",
     image: tableau_species_tracker_image,
-    link: "tableau_species_tracker_link.png",
+    link: "../images/tableau_species_tracker_image.png",
     tags: ["Tableau", "Data Visualization"],
   },
   {
     name: "PowerBI Dashboard Preview",
     description: "Top 10 Countries by COVID-19 Cases Overview",
     image: powerbi_dashboard_image,
-    link: "powerbi_dashboard_link.png",
+    link: "../images/powerbi_dashboard_image.png",
     tags: ["PowerBI", "Data Visualization"],
   },
 ];
