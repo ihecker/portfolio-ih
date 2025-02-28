@@ -97,7 +97,11 @@ const projects = [
 const IndexPage = () => {
   const [heights, setHeights] = useState([20, 20, 20, 20]);
   const [publications, setPublications] = useState([]);
+  const [animationText, setAnimationText] = useState(""); // Add state for animated text
+  const [index, setIndex] = useState(0);
+  const texts = ["Data Enthusiast", "Code Enthusiast", "Science Enthusiast"];
 
+  // Update heights periodically
   useEffect(() => {
     const interval = setInterval(() => {
       const newHeights = heights.map(() => Math.random() * 80 + 20);
@@ -106,6 +110,7 @@ const IndexPage = () => {
     return () => clearInterval(interval);
   }, [heights]);
 
+  // Fetch publications
   useEffect(() => {
     const fetchPublications = async () => {
       try {
@@ -137,6 +142,16 @@ const IndexPage = () => {
     fetchPublications();
   }, []);
 
+  // Update animated text
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimationText(texts[index]);
+      setIndex((prevIndex) => (prevIndex + 1) % texts.length);
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [index]); // This ensures the effect is re-run when `index` changes
+
   return (
     <Layout>
       <div className="main-content">
@@ -154,6 +169,13 @@ const IndexPage = () => {
               ))}
             </div>
           </div>
+
+          {/* Animated text with transition */}
+          <br />
+          <p className="fixed-text"> Irwin Hecker</p>
+          <p className="animated-text">
+            <span className="typing-text"> {animationText}</span>
+          </p>
 
           <p className="intro">
             {links.map((link, i) => (
@@ -222,7 +244,6 @@ const IndexPage = () => {
                     <li key={index}>
                       <a href={pub.doi}>
                         <FaRegFile style={{ marginRight: "8px" }} />{" "}
-                        {/* Use FaRegFile as bullet */}
                         <strong>{pub.title}</strong>
                       </a>{" "}
                       ({pub.year}) - {pub.journal}

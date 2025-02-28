@@ -489,3 +489,42 @@ h2 {
   padding: 5px 10px;
   margin: 5px;
 }
+
+.animated-text {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #f1f1f1;
+  display: inline-flex;
+  white-space: nowrap;
+  overflow: hidden;
+  justify-content: left;
+  left: 50%;
+}
+
+.fixed-text {
+  justify-content: left;
+  left: 50%;
+}
+
+.typing-text {
+  overflow: hidden;
+  width: 0;
+  opacity: 1;
+  white-space: nowrap;
+  animation: typing 7s steps(14) infinite;
+  border-right: 3px solid #f1f1f1; /* Caret effect */
+  justify-content: left;
+  left: 50%;
+}
+
+@keyframes typing {
+  0% {
+    width: 0;
+  }
+  50% {
+    width: 100%;
+  }
+  100% {
+    width: 0;
+  }
+}
