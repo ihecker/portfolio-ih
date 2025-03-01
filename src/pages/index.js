@@ -97,7 +97,7 @@ const projects = [
 const IndexPage = () => {
   const [heights, setHeights] = useState([20, 20, 20, 20]);
   const [publications, setPublications] = useState([]);
-  const [animationText, setAnimationText] = useState(""); // Add state for animated text
+  // const [animationText, setAnimationText] = useState(""); // Add state for animated text
   const [index, setIndex] = useState(0);
   const texts = ["Data Enthusiast", "Code Enthusiast", "Science Enthusiast"];
 
@@ -143,7 +143,8 @@ const IndexPage = () => {
   }, []);
 
   // Update animated text
-  useEffect(() => {
+  {
+    /* useEffect(() => {
     const interval = setInterval(() => {
       setAnimationText(texts[index]);
       setIndex((prevIndex) => (prevIndex + 1) % texts.length);
@@ -151,7 +152,8 @@ const IndexPage = () => {
 
     return () => clearInterval(interval);
   }, [index]); // This ensures the effect is re-run when `index` changes
-
+*/
+  }
   return (
     <Layout>
       <div className="main-content">
@@ -169,13 +171,14 @@ const IndexPage = () => {
               ))}
             </div>
           </div>
-
-          {/* Animated text with transition */}
+          {/*
+   
           <br />
           <p className="fixed-text"> Irwin Hecker</p>
           <p className="animated-text">
             <span className="typing-text"> {animationText}</span>
           </p>
+  */}
 
           <p className="intro">
             {links.map((link, i) => (
