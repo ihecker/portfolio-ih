@@ -57,6 +57,14 @@ const featured = [
 
 const projects = [
   {
+    name: "JUMP IN TECH",
+    description:
+      "Empowering girls through computer programming and digital communication",
+    image: becomtech_image,
+    link: "https://becomtech.fr",
+    tags: ["Trainer", "Animation"],
+  },
+  {
     name: "Porfolio",
     description: "The code behind this portfolio!",
     image: portfolio_image,
