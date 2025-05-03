@@ -11,6 +11,7 @@ import {
   FaRegNewspaper,
   FaRegFile,
 } from "react-icons/fa";
+import becomtech_image from "../images/becomtech_image.png";
 import lantrn_image from "../images/lantrn_image.png";
 import rtisan_image from "../images/rtisan_image.png";
 import portfolio_image from "../images/portfolio_image.png";
