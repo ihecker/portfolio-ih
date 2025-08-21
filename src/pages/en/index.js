@@ -1,8 +1,8 @@
 import * as React from "react";
 import { useState, useEffect } from "react";
-import Layout from "../components/layout";
-import Seo from "../components/seo";
-import "../styles/style.css";
+import Layout from "../../components/layout";
+import Seo from "../../components/seo";
+import "../../styles/style.css";
 import {
   FaLinkedin,
   FaGithub,
@@ -11,18 +11,17 @@ import {
   FaRegNewspaper,
   FaRegFile,
 } from "react-icons/fa";
-import becomtech_image from "../images/becomtech_image.png";
-import lantrn_image from "../images/lantrn_image.png";
-import rtisan_image from "../images/rtisan_image.png";
-import portfolio_image from "../images/portfolio_image.png";
-import respond_image from "../images/respond_image.png";
-import coverage_image from "../images/coverage_image.png";
-import tableau_species_tracker_image from "../images/tableau_species_tracker_image.png";
-import powerbi_dashboard_image from "../images/powerbi_dashboard_image.png";
-import meImage from "../images/me.jpg";
+import becomtech_image from "../../images/becomtech_image.png";
+import lantrn_image from "../../images/lantrn_image.png";
+import rtisan_image from "../../images/rtisan_image.png";
+import portfolio_image from "../../images/portfolio_image.png";
+import respond_image from "../../images/respond_image.png";
+import coverage_image from "../../images/coverage_image.png";
+import tableau_species_tracker_image from "../../images/tableau_species_tracker_image.png";
+import powerbi_dashboard_image from "../../images/powerbi_dashboard_image.png";
 import { Link } from "gatsby";
 
-// Liens pour ressources professionnelles
+// Array of links for professional resources
 const links = [
   {
     text: "LinkedIn",
@@ -44,17 +43,17 @@ const links = [
 const featured = [
   {
     name: "lantrn",
-    description: "Mon package R !",
+    description: "My R package! Functions for workflow efficiency",
     image: lantrn_image,
     link: "https://github.com/ihecker/lantrn",
-    tags: ["R", "Développement"],
+    tags: ["R", "Development"],
   },
   {
     name: "ShinyRtisan",
-    description: "Mon application Shiny !",
+    description: "My Shiny app! Explore R/Shiny customizations",
     image: rtisan_image,
     link: "https://ihecker.shinyapps.io/ShinyRtisan/",
-    tags: ["Shiny", "Développement"],
+    tags: ["Shiny", "Development"],
   },
 ];
 
@@ -62,46 +61,46 @@ const projects = [
   {
     name: "JUMP IN TECH",
     description:
-      "Réduire les inégalités de genre grâce à la programmation informatique",
+      "Empowering girls through computer programming and digital communication",
     image: becomtech_image,
     link: "https://becomtech.fr",
-    tags: ["Formation", "Animation"],
+    tags: ["Training", "Animation"],
   },
   {
     name: "Portfolio",
-    description: "Le code derrière ce portfolio !",
+    description: "The code behind this portfolio!",
     image: portfolio_image,
     link: "https://github.com/ihecker/portfolio-ih",
-    tags: ["ReactJS", "Développement"],
+    tags: ["ReactJS", "Development"],
   },
   {
-    name: "Projet RESPOND",
+    name: "RESPOND project",
     description:
-      "Réduire les problèmes de santé mentale liés à la pandémie de COVID-19",
+      "Reduce mental health concerns resulting from the COVID-19 pandemic",
     image: respond_image,
     link: "https://respond-project.eu/",
     tags: ["R", "Coordination"],
   },
   {
-    name: "Base de données COVerAGE",
-    description: "Base de données démographique mondiale du COVID-19",
+    name: "COVerAGE database",
+    description: "Global demographic database of COVID-19",
     image: coverage_image,
     link: "https://www.coverage-db.org/",
-    tags: ["R", "Gestion de données"],
+    tags: ["R", "Data Management"],
   },
   {
-    name: "Exemple Dashboard Tableau",
-    description: "Suivi des espèces menacées et éteintes",
+    name: "Tableau Dashboard Preview",
+    description: "Extinct and Threatened Species Tracker",
     image: tableau_species_tracker_image,
     link: "public/tableau_species_tracker_image.png",
-    tags: ["Tableau", "Visualisation"],
+    tags: ["Tableau", "Visualization"],
   },
   {
-    name: "Exemple Dashboard PowerBI",
-    description: "Top 10 des pays par cas de COVID-19",
+    name: "PowerBI Dashboard Preview",
+    description: "Top 10 Countries by COVID-19 Cases Overview",
     image: powerbi_dashboard_image,
     link: "public/powerbi_dashboard_image.png",
-    tags: ["PowerBI", "Visualisation"],
+    tags: ["PowerBI", "Visualization"],
   },
 ];
 
@@ -109,11 +108,7 @@ const IndexPage = () => {
   const [heights, setHeights] = useState([20, 20, 20, 20]);
   const [publications, setPublications] = useState([]);
   const [index, setIndex] = useState(0);
-  const texts = [
-    "Passionné de données",
-    "Passionné de code",
-    "Passionné de science",
-  ];
+  const texts = ["Data Enthusiast", "Code Enthusiast", "Science Enthusiast"];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -135,17 +130,14 @@ const IndexPage = () => {
           const work = group["work-summary"][0];
           return {
             title: work.title.title.value,
-            journal: work["journal-title"]?.value || "Inconnu",
-            year: work["publication-date"]?.year?.value || "Inconnu",
-            doi: work["url"]?.value || "Inconnu",
+            journal: work["journal-title"]?.value || "Unknown",
+            year: work["publication-date"]?.year?.value || "Unknown",
+            doi: work["url"]?.value || "Unknown",
           };
         });
         setPublications(works);
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des publications :",
-          error
-        );
+        console.error("Error fetching publications:", error);
       }
     };
     fetchPublications();
@@ -172,14 +164,6 @@ const IndexPage = () => {
           </div>
 
           <p className="intro">
-            <img src={meImage} alt="Irwin Hecker" className="profile-pic" />
-            <h1>Irwin Hecker</h1>
-            <p className="intro">
-              <span className="typing-effect">Données | Code | Science</span>
-            </p>
-          </p>
-
-          <p className="intro">
             {links.map((link, i) => (
               <React.Fragment key={link.url}>
                 <a href={link.url} className="link">
@@ -191,7 +175,7 @@ const IndexPage = () => {
           </p>
 
           <div className="projectsTitle">
-            <h2>Projets en cours</h2>
+            <h2>Featured Projects in the Making</h2>
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
@@ -209,7 +193,7 @@ const IndexPage = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Voir le projet
+                        View Project
                       </a>
                     </div>
                     <div className="tagsContainer">
@@ -227,7 +211,7 @@ const IndexPage = () => {
 
           <div className="publicationsTitle">
             <h2>
-              <FaRegNewspaper /> Publications scientifiques
+              <FaRegNewspaper /> Scientific publications
               <a
                 href="https://orcid.org/0000-0002-5707-2799"
                 target="_blank"
@@ -250,14 +234,14 @@ const IndexPage = () => {
                     </li>
                   ))
                 ) : (
-                  <li>Aucune publication trouvée.</li>
+                  <li>No publications found.</li>
                 )}
               </ul>
             </div>
           </div>
 
           <div className="projectsTitle">
-            <h2>Projets</h2>
+            <h2>Projects</h2>
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
@@ -275,7 +259,7 @@ const IndexPage = () => {
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        Voir le projet
+                        View Project
                       </a>
                     </div>
                     <div className="tagsContainer">
@@ -295,7 +279,7 @@ const IndexPage = () => {
 
       <footer className="footer">
         <p>
-          © {new Date().getFullYear()} Irwin Hecker. Fait avec ❤️ et{" "}
+          © {new Date().getFullYear()} Irwin Hecker. Built with ❤️ and{" "}
           <a href="https://www.gatsbyjs.com">Gatsby</a>.
         </p>
       </footer>
@@ -303,6 +287,6 @@ const IndexPage = () => {
   );
 };
 
-export const Head = () => <Seo title="Accueil" />;
+export const Head = () => <Seo title="Home" />;
 
 export default IndexPage;
