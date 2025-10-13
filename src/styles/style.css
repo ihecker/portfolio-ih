@@ -18,7 +18,7 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: linear-gradient(45deg, #6c6cbd, #1b263b, #1b263b);
+  background: linear-gradient(45deg, #6c6cbd, #1b263bff, #1b263b);
   background-size: 400% 400%;
   animation: gradientAnimation 10s ease infinite;
   font-family: var(--font-body);

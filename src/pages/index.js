@@ -36,7 +36,7 @@ const links = [
   },
   {
     text: "CV",
-    url: "/CV_EN.pdf",
+    url: "/CV_FR.pdf",
     icon: <FaFileAlt />,
   },
 ];
