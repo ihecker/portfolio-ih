@@ -10,6 +10,7 @@ import {
   FaOrcid,
   FaRegNewspaper,
   FaRegFile,
+  FaRegEnvelope,
 } from "react-icons/fa";
 import becomtech_image from "../../images/becomtech_image.png";
 import lantrn_image from "../../images/lantrn_image.png";
@@ -19,6 +20,7 @@ import respond_image from "../../images/respond_image.png";
 import coverage_image from "../../images/coverage_image.png";
 import tableau_species_tracker_image from "../../images/tableau_species_tracker_image.png";
 import powerbi_dashboard_image from "../../images/powerbi_dashboard_image.png";
+import meImage from "../../images/me.jpeg";
 import { Link } from "gatsby";
 
 // Array of links for professional resources
@@ -145,12 +147,15 @@ const IndexPage = () => {
 
   return (
     <Layout>
+      <header className="header">
+        <nav>
+          <Link to="/">💬FR🥖</Link>
+          <Link to="/en">💬EN🌍</Link>
+        </nav>
+      </header>
       <div className="main-content">
         <div className="textCenter">
           <div className="title-container">
-            <nav>
-              <Link to="/">FR</Link> | <Link to="/en">EN</Link>
-            </nav>
             <h1 className="title">Portfolio</h1>
             <div className="bar-chart">
               {heights.map((height, index) => (
@@ -164,6 +169,14 @@ const IndexPage = () => {
           </div>
 
           <p className="intro">
+            <img src={meImage} alt="Irwin Hecker" className="profile-pic" />
+            <h1>Irwin Hecker</h1>
+            <p className="intro">
+              <span className="typing-effect">Data | Code | Science</span>
+            </p>
+          </p>
+
+          <p className="intro">
             {links.map((link, i) => (
               <React.Fragment key={link.url}>
                 <a href={link.url} className="link">
@@ -174,8 +187,17 @@ const IndexPage = () => {
             ))}
           </p>
 
+          <div className="contactSection">
+            <a href="mailto:contact@irwinhecker.com" className="contactButton">
+              Contact me!
+            </a>
+            <a href="mailto:contact@irwinhecker.com" className="contactButton">
+              <FaRegEnvelope />
+            </a>
+          </div>
+
           <div className="projectsTitle">
-            <h2>Featured Projects in the Making</h2>
+            <h2>⏲️Featured Projects in the Making⏲️</h2>
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
@@ -209,39 +231,8 @@ const IndexPage = () => {
             </div>
           </div>
 
-          <div className="publicationsTitle">
-            <h2>
-              <FaRegNewspaper /> Scientific publications
-              <a
-                href="https://orcid.org/0000-0002-5707-2799"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="orcid-logo"
-              >
-                <FaOrcid />
-              </a>
-            </h2>
-            <div className="publications">
-              <ul>
-                {publications.length > 0 ? (
-                  publications.map((pub, index) => (
-                    <li key={index}>
-                      <a href={pub.doi}>
-                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
-                        <strong>{pub.title}</strong>
-                      </a>{" "}
-                      ({pub.year}) - {pub.journal}
-                    </li>
-                  ))
-                ) : (
-                  <li>No publications found.</li>
-                )}
-              </ul>
-            </div>
-          </div>
-
           <div className="projectsTitle">
-            <h2>Projects</h2>
+            <h2>🚀Projects🚀</h2>
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
@@ -272,6 +263,37 @@ const IndexPage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="publicationsTitle">
+            <h2>
+              📰Scientific publications📰
+              <a
+                href="https://orcid.org/0000-0002-5707-2799"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="orcid-logo"
+              >
+                <FaOrcid />
+              </a>
+            </h2>
+            <div className="publications">
+              <ul>
+                {publications.length > 0 ? (
+                  publications.map((pub, index) => (
+                    <li key={index}>
+                      <a href={pub.doi}>
+                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
+                        <strong>{pub.title}</strong>
+                      </a>{" "}
+                      ({pub.year}) - {pub.journal}
+                    </li>
+                  ))
+                ) : (
+                  <li>No publications found.</li>
+                )}
+              </ul>
             </div>
           </div>
         </div>

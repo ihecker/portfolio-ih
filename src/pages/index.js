@@ -10,6 +10,7 @@ import {
   FaOrcid,
   FaRegNewspaper,
   FaRegFile,
+  FaRegEnvelope,
 } from "react-icons/fa";
 import becomtech_image from "../images/becomtech_image.png";
 import lantrn_image from "../images/lantrn_image.png";
@@ -153,12 +154,15 @@ const IndexPage = () => {
 
   return (
     <Layout>
+      <header className="header">
+        <nav>
+          <Link to="/">💬FR🥖</Link>
+          <Link to="/en">💬EN🌍</Link>
+        </nav>
+      </header>
       <div className="main-content">
         <div className="textCenter">
           <div className="title-container">
-            <nav>
-              <Link to="/">FR</Link> | <Link to="/en">EN</Link>
-            </nav>
             <h1 className="title">Portfolio</h1>
             <div className="bar-chart">
               {heights.map((height, index) => (
@@ -190,8 +194,17 @@ const IndexPage = () => {
             ))}
           </p>
 
+          <div className="contactSection">
+            <a href="mailto:contact@irwinhecker.com" className="contactButton">
+              Contactez moi !
+            </a>
+            <a href="mailto:contact@irwinhecker.com" className="contactButton">
+              <FaRegEnvelope />
+            </a>
+          </div>
+
           <div className="projectsTitle">
-            <h2>Projets en cours</h2>
+            <h2>⏲️Projets en cours⏲️</h2>
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
@@ -225,39 +238,8 @@ const IndexPage = () => {
             </div>
           </div>
 
-          <div className="publicationsTitle">
-            <h2>
-              <FaRegNewspaper /> Publications scientifiques
-              <a
-                href="https://orcid.org/0000-0002-5707-2799"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="orcid-logo"
-              >
-                <FaOrcid />
-              </a>
-            </h2>
-            <div className="publications">
-              <ul>
-                {publications.length > 0 ? (
-                  publications.map((pub, index) => (
-                    <li key={index}>
-                      <a href={pub.doi}>
-                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
-                        <strong>{pub.title}</strong>
-                      </a>{" "}
-                      ({pub.year}) - {pub.journal}
-                    </li>
-                  ))
-                ) : (
-                  <li>Aucune publication trouvée.</li>
-                )}
-              </ul>
-            </div>
-          </div>
-
           <div className="projectsTitle">
-            <h2>Projets</h2>
+            <h2>🚀Projets🚀</h2>
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
@@ -288,6 +270,37 @@ const IndexPage = () => {
                   </div>
                 </div>
               ))}
+            </div>
+          </div>
+
+          <div className="publicationsTitle">
+            <h2>
+              📰Publications scientifiques📰
+              <a
+                href="https://orcid.org/0000-0002-5707-2799"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="orcid-logo"
+              >
+                <FaOrcid />
+              </a>
+            </h2>
+            <div className="publications">
+              <ul>
+                {publications.length > 0 ? (
+                  publications.map((pub, index) => (
+                    <li key={index}>
+                      <a href={pub.doi}>
+                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
+                        <strong>{pub.title}</strong>
+                      </a>{" "}
+                      ({pub.year}) - {pub.journal}
+                    </li>
+                  ))
+                ) : (
+                  <li>Aucune publication trouvée.</li>
+                )}
+              </ul>
             </div>
           </div>
         </div>

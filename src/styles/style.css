@@ -52,10 +52,10 @@ body {
     width: 0;
   }
   30% {
-    width: 22%;
+    width: 24%;
   }
   70% {
-    width: 22%;
+    width: 24%;
   }
   100% {
     width: 0;
@@ -130,22 +130,22 @@ a:hover {
 .intro {
   max-width: none;
   line-height: var(--line-height-loose);
-  font-size: 14px;
+  font-size: 16px;
 }
 
 /* Footer */
 .footer {
   width: 100%;
-  text-align: center;
+  text-align: left;
   font-size: 1em;
   opacity: 0.8;
   margin-top: auto;
 }
 
-/* Nav stylé */
+/* Nav style */
 nav {
   display: flex;
-  gap: 20px;
+  gap: 2px;
   justify-content: center;
   align-items: center;
   margin-bottom: 30px;
@@ -277,6 +277,9 @@ h2 {
   padding-bottom: 5px;
   display: inline-block;
   animation: underlineAnimation infinite 12s;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .publications::-webkit-scrollbar {
@@ -371,7 +374,7 @@ h2 {
 }
 .projectContent a:hover,
 .featuredContent a:hover {
-  color: #007acc;
+  color: #6c6cbd;
 }
 
 .projectTags,
@@ -389,4 +392,42 @@ h2 {
   border-radius: 12px;
   padding: 5px 10px;
   margin: 5px;
+}
+
+.contactSection {
+  text-align: center;
+  margin: 0px 0;
+}
+
+.contactButton {
+  background-color: #953735;
+  color: white;
+  padding: 10px 10px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.3s ease;
+}
+
+.contactButton:hover {
+  background-color: #481601;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  color: var(--color-text);
+  font-family: var(--font-title);
+  font-weight: 500;
+  font-size: 1.5rem;
+  padding: var(--space-1) var(--size-gap);
+  text-align: center;
+  backdrop-filter: blur(1px);
+  z-index: 999;
+}
+
+.header:hover {
+  color: var(--color-primary);
 }
