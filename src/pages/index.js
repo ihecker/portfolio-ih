@@ -19,7 +19,7 @@ import respond_image from "../images/respond_image.png";
 import coverage_image from "../images/coverage_image.png";
 import tableau_species_tracker_image from "../images/tableau_species_tracker_image.png";
 import powerbi_dashboard_image from "../images/powerbi_dashboard_image.png";
-import meImage from "../images/me.jpg";
+import meImage from "../images/me.jpeg";
 import { Link } from "gatsby";
 
 // Liens pour ressources professionnelles
