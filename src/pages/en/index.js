@@ -11,8 +11,16 @@ import {
   FaRegNewspaper,
   FaRegFile,
   FaRegEnvelope,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
+import fresque_sante_mentale_image from "../../images/fresque_sante_mentale_image.jpg";
 import becomtech_image from "../../images/becomtech_image.png";
+import becomtech_image2 from "../../images/becomtech_image2.jpg";
+import becomtech_image3 from "../../images/becomtech_image3.png";
+import these_image from "../../images/these_image.jpg";
+import these_image2 from "../../images/these_image2.jpg";
+import these_image3 from "../../images/these_image3.jpg";
 import lantrn_image from "../../images/lantrn_image.png";
 import rtisan_image from "../../images/rtisan_image.png";
 import portfolio_image from "../../images/portfolio_image.png";
@@ -23,7 +31,68 @@ import powerbi_dashboard_image from "../../images/powerbi_dashboard_image.png";
 import meImage from "../../images/me.jpeg";
 import { Link } from "gatsby";
 
-// Array of links for professional resources
+// Carousel Component
+const ImageCarousel = ({ images, alt }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+
+  return (
+    <div className="carousel-container">
+      <img
+        src={images[currentIndex]}
+        alt={`${alt} - ${currentIndex + 1}`}
+        className="projectTopImage"
+      />
+
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={goToPrevious}
+            className="carousel-btn carousel-btn-left"
+          >
+            <FaChevronLeft />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className="carousel-btn carousel-btn-right"
+          >
+            <FaChevronRight />
+          </button>
+
+          <div className="carousel-indicators">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`carousel-dot ${
+                  currentIndex === index ? "active" : ""
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
+
+// Links for professional resources
 const links = [
   {
     text: "LinkedIn",
@@ -59,15 +128,33 @@ const featured = [
   },
 ];
 
-const projects = [
+const projectsTop = [
+  {
+    name: "Mental Health Fresk for Youth",
+    description:
+      "Harnessing collective intelligence to address mental health in a general and universal way",
+    images: [fresque_sante_mentale_image],
+    link: "https://www.nightline.fr/la-fresque-de-la-sante-mentale",
+    tags: ["Training", "Facilitation"],
+  },
   {
     name: "JUMP IN TECH",
-    description:
-      "Empowering girls through computer programming and digital communication",
-    image: becomtech_image,
+    description: "Reducing gender inequalities through computer programming",
+    images: [becomtech_image3, becomtech_image2, becomtech_image],
     link: "https://becomtech.fr",
-    tags: ["Training", "Animation"],
+    tags: ["Training", "Facilitation"],
   },
+  {
+    name: "My PhD",
+    description:
+      "Role of economic and social difficulties on mental health during the COVID-19 pandemic",
+    images: [these_image, these_image2, these_image3],
+    link: "https://theses.fr/2024SORUS387",
+    tags: ["Thesis", "Doctorate"],
+  },
+];
+
+const projects = [
   {
     name: "Portfolio",
     description: "The code behind this portfolio!",
@@ -78,7 +165,7 @@ const projects = [
   {
     name: "RESPOND project",
     description:
-      "Reduce mental health concerns resulting from the COVID-19 pandemic",
+      "Reducing mental health concerns resulting from the COVID-19 pandemic",
     image: respond_image,
     link: "https://respond-project.eu/",
     tags: ["R", "Coordination"],
@@ -198,6 +285,7 @@ const IndexPage = () => {
 
           <div className="projectsTitle">
             <h2>⏲️Featured Projects in the Making⏲️</h2>
+
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
@@ -233,6 +321,35 @@ const IndexPage = () => {
 
           <div className="projectsTitle">
             <h2>🚀Projects🚀</h2>
+
+            <div className="projectsTopGrid">
+              {projectsTop.map((project, index) => (
+                <div key={index} className="projectTopCard">
+                  <ImageCarousel images={project.images} alt={project.name} />
+                  <div className="projectTopContent">
+                    <h3>{project.name}</h3>
+                    <p>{project.description}</p>
+                    <div className="projectTopTags">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        View Project
+                      </a>
+                    </div>
+                    <div className="tagsContainer">
+                      {project.tags.map((tag, i) => (
+                        <span key={i} className="projectTag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
@@ -268,7 +385,7 @@ const IndexPage = () => {
 
           <div className="publicationsTitle">
             <h2>
-              📰Scientific publications📰
+              📰Scientific Publications📰
               <a
                 href="https://orcid.org/0000-0002-5707-2799"
                 target="_blank"

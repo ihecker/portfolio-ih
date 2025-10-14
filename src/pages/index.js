@@ -11,8 +11,16 @@ import {
   FaRegNewspaper,
   FaRegFile,
   FaRegEnvelope,
+  FaChevronLeft,
+  FaChevronRight,
 } from "react-icons/fa";
+import fresque_sante_mentale_image from "../images/fresque_sante_mentale_image.jpg";
 import becomtech_image from "../images/becomtech_image.png";
+import becomtech_image2 from "../images/becomtech_image2.jpg";
+import becomtech_image3 from "../images/becomtech_image3.png";
+import these_image from "../images/these_image.jpg";
+import these_image2 from "../images/these_image2.jpg";
+import these_image3 from "../images/these_image3.jpg";
 import lantrn_image from "../images/lantrn_image.png";
 import rtisan_image from "../images/rtisan_image.png";
 import portfolio_image from "../images/portfolio_image.png";
@@ -22,6 +30,67 @@ import tableau_species_tracker_image from "../images/tableau_species_tracker_ima
 import powerbi_dashboard_image from "../images/powerbi_dashboard_image.png";
 import meImage from "../images/me.jpeg";
 import { Link } from "gatsby";
+
+// Composant Carrousel
+const ImageCarousel = ({ images, alt }) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
+    );
+  };
+
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const goToSlide = (index) => {
+    setCurrentIndex(index);
+  };
+
+  return (
+    <div className="carousel-container">
+      <img
+        src={images[currentIndex]}
+        alt={`${alt} - ${currentIndex + 1}`}
+        className="projectTopImage"
+      />
+
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={goToPrevious}
+            className="carousel-btn carousel-btn-left"
+          >
+            <FaChevronLeft />
+          </button>
+
+          <button
+            onClick={goToNext}
+            className="carousel-btn carousel-btn-right"
+          >
+            <FaChevronRight />
+          </button>
+
+          <div className="carousel-indicators">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`carousel-dot ${
+                  currentIndex === index ? "active" : ""
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+};
 
 // Liens pour ressources professionnelles
 const links = [
@@ -59,15 +128,34 @@ const featured = [
   },
 ];
 
-const projects = [
+const projectsTop = [
+  {
+    name: "Fresque de la Santé Mentale Jeunes",
+    description:
+      "Mobiliser l'intelligence collective pour aborder la santé mentale de manière générale et universelle",
+    images: [fresque_sante_mentale_image],
+    link: "https://www.nightline.fr/la-fresque-de-la-sante-mentale",
+    tags: ["Formation", "Animation"],
+  },
   {
     name: "JUMP IN TECH",
     description:
       "Réduire les inégalités de genre grâce à la programmation informatique",
-    image: becomtech_image,
+    images: [becomtech_image3, becomtech_image2, becomtech_image],
     link: "https://becomtech.fr",
     tags: ["Formation", "Animation"],
   },
+  {
+    name: "Ma Thèse",
+    description:
+      "Rôle des difficultés économiques et sociales vis-à-vis de la santé mentale au cours de la pandémie de COVID-19",
+    images: [these_image, these_image2, these_image3],
+    link: "https://theses.fr/2024SORUS387",
+    tags: ["Thèse", "Doctorat"],
+  },
+];
+
+const projects = [
   {
     name: "Portfolio",
     description: "Le code derrière ce portfolio !",
@@ -84,7 +172,7 @@ const projects = [
     tags: ["R", "Coordination"],
   },
   {
-    name: "Base de données COVerAGE",
+    name: "Base de Données COVerAGE",
     description: "Base de données démographique mondiale du COVID-19",
     image: coverage_image,
     link: "https://www.coverage-db.org/",
@@ -205,6 +293,7 @@ const IndexPage = () => {
 
           <div className="projectsTitle">
             <h2>⏲️Projets en cours⏲️</h2>
+
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
@@ -240,6 +329,35 @@ const IndexPage = () => {
 
           <div className="projectsTitle">
             <h2>🚀Projets🚀</h2>
+
+            <div className="projectsTopGrid">
+              {projectsTop.map((project, index) => (
+                <div key={index} className="projectTopCard">
+                  <ImageCarousel images={project.images} alt={project.name} />
+                  <div className="projectTopContent">
+                    <h3>{project.name}</h3>
+                    <p>{project.description}</p>
+                    <div className="projectTopTags">
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        Voir le projet
+                      </a>
+                    </div>
+                    <div className="tagsContainer">
+                      {project.tags.map((tag, i) => (
+                        <span key={i} className="projectTag">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
