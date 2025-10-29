@@ -104,11 +104,6 @@ const links = [
     url: "https://github.com/ihecker",
     icon: <FaGithub />,
   },
-  {
-    text: "CV",
-    url: "/CV_EN.pdf",
-    icon: <FaFileAlt />,
-  },
 ];
 
 const featured = [
