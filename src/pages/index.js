@@ -108,18 +108,11 @@ const links = [
 
 const featured = [
   {
-    name: "lantrn",
-    description: "Mon package R !",
-    image: lantrn_image,
-    link: "https://github.com/ihecker/lantrn",
-    tags: ["R", "Développement"],
-  },
-  {
-    name: "ShinyRtisan",
-    description: "Mon application Shiny !",
-    image: rtisan_image,
-    link: "https://ihecker.shinyapps.io/ShinyRtisan/",
-    tags: ["Shiny", "Développement"],
+    name: "Portfolio",
+    description: "Le code derrière ce portfolio !",
+    image: portfolio_image,
+    link: "https://github.com/ihecker/portfolio-ih",
+    tags: ["ReactJS", "Développement"],
   },
 ];
 
@@ -152,11 +145,18 @@ const projectsTop = [
 
 const projects = [
   {
-    name: "Portfolio",
-    description: "Le code derrière ce portfolio !",
-    image: portfolio_image,
-    link: "https://github.com/ihecker/portfolio-ih",
-    tags: ["ReactJS", "Développement"],
+    name: "lantrn",
+    description: "Mon package R !",
+    image: lantrn_image,
+    link: "https://github.com/ihecker/lantrn",
+    tags: ["R", "Développement"],
+  },
+  {
+    name: "ShinyRtisan",
+    description: "Mon application Shiny !",
+    image: rtisan_image,
+    link: "https://ihecker.shinyapps.io/ShinyRtisan/",
+    tags: ["Shiny", "Développement"],
   },
   {
     name: "Projet RESPOND",

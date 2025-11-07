@@ -416,12 +416,9 @@ h2 {
 
 .featuredGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(1, 1fr);
   gap: 0px;
   margin: 0px;
-}
-.featuredGrid > * {
-  transform: scale(0.8);
 }
 
 /* Cards projets & featured */
@@ -472,7 +469,7 @@ h2 {
 .projectTopContent,
 .featuredContent {
   flex: 1;
-  display: flex;
+  display: start;
   flex-direction: column;
   justify-content: space-between;
   font-family: var(--font-body);
@@ -480,6 +477,7 @@ h2 {
 .projectContent h3,
 .projectTopContent h3,
 .featuredContent h3 {
+  display: start;
   color: var(--color-text);
   margin: 0.2em 0 0;
   font-family: var(--font-title);
@@ -487,11 +485,10 @@ h2 {
 .projectContent p,
 .projectTopContent p,
 .featuredContent p {
-  text-align: justify;
-  text-justify: inter-word;
+  text-align: left;
   color: #ddd;
   margin: 1px 0;
-  display: flex;
+  display: start;
   flex-direction: column;
   align-items: center;
   padding: 10px;
