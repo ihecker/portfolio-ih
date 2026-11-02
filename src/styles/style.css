@@ -1,13 +1,37 @@
 :root {
-  --color-primary: #953735;
+  --color-primary: #953735; /* fills that mean "act here": buttons, hovers */
+  --color-primary-strong: #481601; /* filled hover */
+  --color-primary-text: #f2a29f; /* the red as text on dark: 5.5:1 on cards, 7.6:1 on page */
   --color-text: #ffffff;
+  /* Cards sit on an opaque ink-blue surface so text contrast never depends
+     on where the card falls on the drifting background gradient. */
+  --color-card: #323c4f;
+  /* Scrims behind the photo controls: they keep arrows legible on any photo. */
+  --color-scrim: rgba(0, 0, 0, 0.6);
+  --color-scrim-hover: rgba(0, 0, 0, 0.85);
+  --color-scrim-dot: rgba(0, 0, 0, 0.3);
+  --color-card-hover: #3b4559;
   --size-gap: 20px;
   --space-1: 10px;
   --line-height-loose: 1.5;
-  --w: 280px;
-  --n: 2;
-  --font-title: "Poppins", sans-serif;
-  --font-body: "Open Sans", sans-serif;
+  --font-title: "Poppins", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Open Sans Variable", "Open Sans", "Segoe UI", system-ui,
+    sans-serif;
+
+  /* Type roles (rem, so browser zoom and user font size still apply) */
+  --text-meta: 0.8125rem; /* tags, publication details, footer */
+  --text-body: 1rem; /* card text, publications */
+  --text-lead: 1.25rem; /* tagline */
+  --text-card-title: 1.25rem; /* h3 */
+  --text-section: clamp(1.5rem, 6vw, 2rem); /* h2 pills */
+  --text-display: clamp(2.25rem, 9vw, 3rem); /* name */
+  --leading-body: 1.6; /* light text on dark: a little more air */
+  --leading-title: 1.2;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1); /* confident arrival */
+  --dur-feedback: 150ms;
+  --dur-state: 250ms;
 }
 
 body {
@@ -18,47 +42,52 @@ body {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background: linear-gradient(45deg, #6c6cbd, #1b263bff, #1b263b);
-  background-size: 400% 400%;
-  animation: gradientAnimation 10s ease infinite;
+  background: #1b263b;
   font-family: var(--font-body);
   color: var(--color-text);
 }
 
-@keyframes gradientAnimation {
-  0% {
-    background-position: 0% 50%;
+/* The night sky behind the notebook: a fixed layer three viewports wide,
+   slid sideways with transform so only the compositor works. */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 300vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(45deg, #6c6cbd, #1b263b 45%, #1b263b);
+  animation: night-drift 40s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes night-drift {
+  from {
+    transform: translateX(0);
   }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
+  to {
+    transform: translateX(-66.667%);
   }
 }
 
 @keyframes blink-cursor {
-  from,
+  from {
+    border-color: var(--color-text);
+  }
+  50%,
   to {
     border-color: transparent;
-  }
-  50% {
-    border-color: var(--color-text);
   }
 }
 
 @keyframes typing {
-  0% {
-    width: 0;
+  from {
+    clip-path: inset(0 100% 0 0);
   }
-  30% {
-    width: 24%;
-  }
-  70% {
-    width: 24%;
-  }
-  100% {
-    width: 0;
+  to {
+    clip-path: inset(0 0 0 0);
   }
 }
 
@@ -70,25 +99,44 @@ h3 {
 }
 
 h1 {
-  font-size: 3em;
+  font-size: var(--text-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
   color: var(--color-text);
   text-align: center;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
+h1,
+h2,
+h3 {
+  line-height: var(--leading-title);
+  text-wrap: balance;
+}
+
+h2 {
+  font-weight: 700;
+}
+
+h3 {
+  font-size: var(--text-card-title);
+  font-weight: 600;
+}
+
 p {
-  font-size: 1.2em;
-  line-height: var(--line-height-loose);
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
   margin: 0.5em 0;
+  text-wrap: pretty;
 }
 
 a {
   color: var(--color-text);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color var(--dur-state) ease;
 }
 a:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 .typing-effect {
@@ -96,50 +144,58 @@ a:hover {
   overflow: hidden;
   white-space: nowrap;
   display: inline-block;
-  border-right: 2px solid var(--color-text);
-  animation: typing 6s steps(32) 1s forwards infinite,
-    blink-cursor 1s step-end infinite;
-}
-
-/* Liste */
-.list {
-  display: grid;
-  margin: var(--size-gap) 0;
-  gap: var(--size-gap);
-  grid-template-columns: repeat(
-    auto-fit,
-    minmax(max(var(--w), calc(100% / (var(--n)+1) + 0.1%)), 1fr)
-  );
-}
-.listItem::marker {
-  color: var(--color-primary);
-}
-.listItemLink {
-  color: var(--color-primary);
-  font-weight: bold;
-  text-decoration: none;
-}
-.listItemDescription {
-  color: var(--color-text);
-  margin-top: var(--space-1);
+  padding-right: 4px;
+  border-right: 2px solid transparent;
+  /* Typed once (1.4 s), then the cursor blinks three times and lifts. */
+  animation: typing 1.6s steps(var(--typing-steps, 24)) 0.4s both,
+    blink-cursor 0.9s step-end 0.4s 4 both;
 }
 
 .textCenter {
   text-align: center;
 }
-.intro {
-  max-width: none;
-  line-height: var(--line-height-loose);
-  font-size: 16px;
-}
-
 /* Footer */
 .footer {
   width: 100%;
-  text-align: left;
-  font-size: 1em;
-  opacity: 0.8;
-  margin-top: auto;
+  text-align: center;
+  font-size: var(--text-body);
+  opacity: 1;
+  margin-top: 48px;
+}
+
+/* Hero: photo, name, tagline, contact, then social links */
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding-top: 8px;
+}
+.hero h1 {
+  margin: 4px 0 0;
+  line-height: 1.1;
+}
+.hero-tagline {
+  font-size: clamp(1rem, 5vw, 1.25rem);
+  margin: 0 0 12px;
+}
+.hero-links {
+  font-size: var(--text-body);
+  margin: 4px 0 0;
+}
+
+/* Section rhythm: generous space between sections, tight under each title */
+.projectsTitle,
+.publicationsTitle {
+  margin-top: 72px;
+}
+.projectsTitle > h2,
+.publicationsTitle > h2 {
+  margin: 0 0 24px;
+  padding: 8px 20px 10px;
+}
+.closingContact {
+  margin-top: 72px;
 }
 
 /* Nav style */
@@ -148,15 +204,15 @@ nav {
   gap: 2px;
   justify-content: center;
   align-items: center;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 nav a {
   font-family: var(--font-title);
   font-weight: 600;
-  font-size: 1.1rem;
+  font-size: var(--text-body);
   padding: 6px 12px;
-  border-radius: 6px;
-  transition: background 0.3s ease, color 0.3s ease;
+  border-radius: 8px;
+  transition: background-color var(--dur-state) ease, color var(--dur-state) ease;
 }
 nav a:hover {
   background: var(--color-primary);
@@ -169,17 +225,11 @@ nav a:hover {
   height: 200px;
   border-radius: 50%;
   object-fit: cover;
-  margin-bottom: 10px;
 }
 
 .publications {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  max-height: 400px;
-  overflow-y: auto;
-  font-size: 0.9rem;
+  font-size: var(--text-body);
+  text-align: left;
   font-family: var(--font-body);
 }
 
@@ -188,41 +238,31 @@ nav a:hover {
   padding: 0;
   margin: 0;
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .publications li {
-  background: rgba(255, 255, 255, 0.1);
+  scroll-snap-align: start;
+}
+
+.publications li {
+  background: var(--color-card);
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 12px;
   padding: 20px;
-  transition: all 0.3s ease;
+  transition: transform var(--dur-state) var(--ease-out),
+    box-shadow var(--dur-state) var(--ease-out),
+    border-color var(--dur-state) ease, background-color var(--dur-state) ease;
   position: relative;
   overflow: hidden;
   backdrop-filter: blur(10px);
 }
 
-.publications li::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 4px;
-  background: var(--color-primary);
-  transform: scaleY(0);
-  transition: transform 0.3s ease;
-}
-
-.publications li:hover {
+.publications li.publication--link:hover {
   transform: translateY(-4px);
   box-shadow: 0 8px 24px rgba(149, 55, 53, 0.3);
-  border-color: var(--color-primary);
-  background: rgba(255, 255, 255, 0.15);
-}
-
-.publications li:hover::before {
-  transform: scaleY(1);
+  border-color: var(--color-primary-text);
+  background: var(--color-card-hover);
 }
 
 .publications a {
@@ -232,186 +272,72 @@ nav a:hover {
   align-items: flex-start;
   gap: 12px;
   font-weight: bold;
-  transition: color 0.3s ease;
+  transition: color var(--dur-state) ease;
 }
 
 .publications a:hover {
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 .publications a svg {
   flex-shrink: 0;
   margin-top: 4px;
-  transition: transform 0.3s ease;
+  transition: transform var(--dur-state) var(--ease-out);
   font-size: 1.2em;
 }
 
-.publications li:hover a svg {
+.publications li.publication--link:hover a svg {
   transform: scale(1.2) rotate(5deg);
-  color: var(--color-primary);
+  color: var(--color-primary-text);
 }
 
 .publications strong {
   display: block;
-  font-size: 16px;
+  font-size: var(--text-body);
   margin-bottom: 8px;
   line-height: 1.4;
   font-family: var(--font-title);
 }
 
-.publications li {
-  position: relative;
-}
-
-.publications li::after {
-  content: "🔗 " attr(data-doi);
-  position: absolute;
-  bottom: 10px;
-  right: 15px;
-  font-size: 11px;
-  color: rgba(255, 255, 255, 0.6);
-  opacity: 0;
-  transform: translateY(10px);
-  transition: all 0.3s ease;
-  max-width: 60%;
-  text-align: right;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.publications li:hover::after {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.publication-info {
-  display: block;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 14px;
-  margin-top: 8px;
-  font-style: italic;
-}
-
-.publication-year {
-  display: inline-block;
-  background: var(--color-primary);
-  color: white;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: bold;
-  margin-right: 8px;
-  font-style: normal;
-}
-
-.publications a::after {
-  content: "↗";
-  display: inline-block;
-  margin-left: 8px;
-  opacity: 0;
-  transform: translate(-4px, -4px);
-  transition: all 0.3s ease;
-  font-weight: bold;
-  font-size: 1.1em;
-}
-
-.publications li:hover a::after {
-  opacity: 1;
-  transform: translate(0, 0);
-}
-
-/* Scrollbar styling */
-.publications::-webkit-scrollbar {
-  width: 12px;
-}
-
-.publications::-webkit-scrollbar-thumb {
-  background-color: rgba(149, 55, 53, 0.6);
-  border-radius: 10px;
-  border: 2px solid transparent;
-  background-clip: padding-box;
-}
-
-.publications::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-}
-
-.publications::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
-}
-
-/* Responsive */
+/* Publications on narrow screens */
 @media (max-width: 768px) {
   .publications li {
     padding: 16px;
   }
-
-  .publications strong {
-    font-size: 14px;
-  }
-
-  .publications li::after {
-    display: none;
-  }
-}
-
-@keyframes underlineAnimation {
-  0% {
-    border-width: 0%;
-    width: 100%;
-  }
-  50% {
-    border-width: 100%;
-    width: 80%;
-  }
-  100% {
-    border-width: 0%;
-    width: 100%;
-  }
 }
 
 h2 {
-  font-size: 2rem;
   border-bottom: 2px solid var(--color-primary);
   padding-bottom: 5px;
   display: inline-block;
-  animation: underlineAnimation infinite 12s;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.publications::-webkit-scrollbar {
-  width: 12px;
-}
-.publications::-webkit-scrollbar-thumb {
-  background-color: lightgrey;
-  border-radius: 10px;
-  border: 1px solid white;
-}
-.publications::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
-}
-.publications::-webkit-scrollbar-thumb:hover {
-  background-color: var(--color-primary);
-}
-
 /* Grids projets */
 .projectsGrid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
   gap: 20px;
-  margin: 20px;
+  margin: 20px 0 0;
 }
 
 .projectsTopGrid {
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
-  gap: 20px;
-  margin: 20px;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 24px;
+  margin: 0;
+}
+
+/* Featured projects: photos beside the text on wide screens */
+@media (min-width: 768px) {
+  .projectsTopGrid .projectTopCard {
+    display: grid;
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    gap: 24px;
+    align-items: center;
+  }
 }
 
 .featuredGrid {
@@ -425,12 +351,13 @@ h2 {
 .projectCard,
 .projectTopCard,
 .featuredCard {
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--color-card);
   border-radius: 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  text-align: center;
+  transition: transform var(--dur-state) var(--ease-out),
+    box-shadow var(--dur-state) var(--ease-out);
+  text-align: left;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -449,18 +376,7 @@ h2 {
   width: 100%;
   height: 120px;
   object-fit: cover;
-  border-bottom: 2px solid var(--color-primary);
-  border-radius: 8px 8px 0 0;
-  display: block;
-  margin-bottom: 0;
-}
-
-.projectTopImage {
-  width: 100%;
-  height: 120px;
-  object-fit: contain;
-  border-bottom: 2px solid var(--color-primary);
-  border-radius: 8px 8px 0 0;
+  border-radius: 8px;
   display: block;
   margin-bottom: 0;
 }
@@ -469,7 +385,7 @@ h2 {
 .projectTopContent,
 .featuredContent {
   flex: 1;
-  display: start;
+  display: flex;
   flex-direction: column;
   justify-content: space-between;
   font-family: var(--font-body);
@@ -477,9 +393,8 @@ h2 {
 .projectContent h3,
 .projectTopContent h3,
 .featuredContent h3 {
-  display: start;
   color: var(--color-text);
-  margin: 0.2em 0 0;
+  margin: 12px 0 0;
   font-family: var(--font-title);
 }
 .projectContent p,
@@ -487,25 +402,23 @@ h2 {
 .featuredContent p {
   text-align: left;
   color: #ddd;
-  margin: 1px 0;
-  display: start;
-  flex-direction: column;
-  align-items: center;
-  padding: 10px;
-  width: 100%;
+  margin: 8px 0 12px;
 }
 .projectContent a,
 .projectTopContent a,
 .featuredContent a {
-  color: var(--color-primary);
-  font-weight: bold;
-  text-decoration: none;
-  transition: color 0.3s ease;
+  color: var(--color-primary-text);
+  font-weight: 700;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: color var(--dur-state) ease;
 }
 .projectContent a:hover,
 .projectTopContent a:hover,
 .featuredContent a:hover {
-  color: #6c6cbd;
+  color: var(--color-text);
+  text-decoration-thickness: 2px;
 }
 
 .projectTags,
@@ -514,42 +427,67 @@ h2 {
   margin-top: auto;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
+}
+.tagsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
 }
 .projectTag,
 .projectTopTag,
 .featuredTag {
-  background: var(--color-primary);
-  color: white;
-  font-size: 0.8rem;
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--color-text);
+  font-size: var(--text-meta);
+  font-weight: 600;
   border-radius: 12px;
   padding: 5px 10px;
-  margin: 5px;
 }
 
 .contactSection {
-  text-align: center;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
   margin: 0px 0;
 }
 
 .contactButton {
-  background-color: #953735;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: var(--color-primary);
   color: white;
-  padding: 10px 10px;
+  padding: 10px 14px;
   border-radius: 10px;
   text-decoration: none;
+  font-family: var(--font-title);
+  font-size: var(--text-body);
   font-weight: 600;
-  transition: background-color 0.3s ease;
+  min-height: 44px;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  transition: background-color var(--dur-state) ease;
 }
 
 .contactButton:hover {
-  background-color: #481601;
+  background-color: var(--color-primary-strong);
+  color: white;
+}
+
+.contactButton--secondary {
+  background-color: transparent;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.45);
+}
+
+.contactButton--secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   width: 100%;
   color: var(--color-text);
   font-family: var(--font-title);
@@ -557,29 +495,22 @@ h2 {
   font-size: 1.5rem;
   padding: var(--space-1) var(--size-gap);
   text-align: center;
-  backdrop-filter: blur(1px);
-  z-index: 999;
-}
-
-.header:hover {
-  color: var(--color-primary);
 }
 
 .carousel-container {
   position: relative;
   width: 100%;
-  height: 400px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
-  border-radius: 8px 8px 0 0;
-  background: #f5f5f5;
-  border-bottom: 2px solid var(--color-primary);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .carousel-container img {
   width: 100%;
-  height: 400px;
+  height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease-in-out;
+  transition: opacity var(--dur-state) ease;
   display: block;
   margin-bottom: 0;
 }
@@ -588,20 +519,22 @@ h2 {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  background: rgba(0, 0, 0, 0.6);
+  background: var(--color-scrim);
   color: white;
   border: none;
   border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  transition: all 0.3s ease;
+  font-size: 1rem;
+  transition: opacity var(--dur-state) ease,
+    background-color var(--dur-feedback) ease,
+    transform var(--dur-feedback) var(--ease-out);
   z-index: 10;
-  opacity: 0;
+  opacity: 0.85;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
@@ -610,7 +543,7 @@ h2 {
 }
 
 .carousel-btn:hover {
-  background: rgba(0, 0, 0, 0.85);
+  background: var(--color-scrim-hover);
   transform: translateY(-50%) scale(1.1);
 }
 
@@ -635,8 +568,8 @@ h2 {
   gap: 6px;
   z-index: 10;
   padding: 6px 12px;
-  background: rgba(0, 0, 0, 0.3);
-  border-radius: 20px;
+  background: var(--color-scrim-dot);
+  border-radius: 16px;
   backdrop-filter: blur(4px);
 }
 
@@ -647,7 +580,9 @@ h2 {
   border: 2px solid white;
   background: transparent;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: width var(--dur-state) var(--ease-out),
+    background-color var(--dur-feedback) ease,
+    transform var(--dur-feedback) var(--ease-out);
   padding: 0;
 }
 
@@ -678,10 +613,9 @@ h2 {
 /* Responsive */
 @media (max-width: 768px) {
   .carousel-btn {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-    opacity: 1;
+    width: 2.75rem;
+    height: 2.75rem;
+    font-size: 1rem;
   }
 
   .carousel-btn-left {
@@ -711,12 +645,425 @@ h2 {
   touch-action: pan-y pinch-zoom;
 }
 
-.carousel-btn:focus {
-  outline: 2px solid white;
+/* Keyboard focus: one ring from the palette, everywhere */
+:focus-visible {
+  outline: 2px solid var(--color-primary-text);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+.carousel-btn:focus-visible {
+  border-radius: 50%;
+}
+
+/* Browser surfaces */
+::selection {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+/* ---------- Adaptation: small screens, touch, keyboard ---------- */
+
+/* Fluid display sizes so the name and section pills fit at 320px */
+.projectsTitle > h2,
+.publicationsTitle > h2 {
+  font-size: var(--text-section);
+}
+
+/* Carousel controls must never depend on hover to be found */
+.carousel-btn:focus-visible,
+.carousel-container:focus-within .carousel-btn {
+  opacity: 1;
+}
+
+/* Narrow screens: give content the width back */
+@media (max-width: 640px) {
+  :root {
+    --size-gutter: 16px;
+  }
+  .projectCard,
+  .projectTopCard,
+  .featuredCard {
+    padding: 16px;
+  }
+  .projectsTitle,
+  .publicationsTitle,
+  .closingContact {
+    margin-top: 56px;
+  }
+  .profile-pic {
+    width: 160px;
+    height: 160px;
+  }
+}
+
+/* Touch devices: no hover to reveal things, larger hit areas */
+@media (hover: none) {
+  .carousel-btn {
+    opacity: 1;
+  }
+  /* Tapping a card must not leave it stuck in its hover pose */
+  .projectCard:hover,
+  .projectTopCard:hover,
+  .featuredCard:hover,
+  .publications li:hover {
+    transform: none;
+  }
+}
+
+@media (pointer: coarse) {
+  nav a,
+  .hero-links a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding-inline: 12px;
+  }
+  .projectTags a,
+  .projectTopTags a,
+  .featuredTags a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+  .carousel-btn {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  /* Dots stay small visually; the invisible hit area grows to 44px */
+  .carousel-dot {
+    position: relative;
+  }
+  .carousel-dot::after {
+    content: "";
+    position: absolute;
+    inset: -18px -8px;
+  }
+  .carousel-indicators {
+    gap: 14px;
+  }
+}
+
+/* Landscape phones: keep name and contact inside the first screen */
+@media (orientation: landscape) and (max-height: 500px) {
+  nav {
+    margin-bottom: 4px;
+  }
+  .hero {
+    gap: 8px;
+    padding-top: 0;
+  }
+  .profile-pic {
+    width: 88px;
+    height: 88px;
+  }
+  .hero h1 {
+    font-size: 2rem;
+  }
+  .hero-tagline {
+    margin-bottom: 4px;
+  }
+}
+
+/* Long titles and addresses wrap instead of overflowing their card */
+.projectContent h3,
+.projectTopContent h3,
+.featuredContent h3,
+.publications strong {
+  overflow-wrap: anywhere;
+}
+
+/* 404 */
+.notFound {
+  text-align: center;
+  min-height: 60vh;
+  justify-content: center;
+}
+.notFound h1 {
+  font-size: var(--text-section);
+}
+
+/* ---------- Reduced motion ----------
+   Nothing travels or loops; state changes stay legible through colour
+   and opacity, and the tagline is simply there. */
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+    transform: translateX(-33.333%);
+  }
+  .typing-effect {
+    animation: none;
+    clip-path: none;
+    border-right-color: transparent;
+  }
+  .carousel-container img {
+    animation: none;
+  }
+  .projectCard:hover,
+  .projectTopCard:hover,
+  .featuredCard:hover,
+  .publications li.publication--link:hover,
+  .publications li.publication--link:hover a svg,
+  .carousel-dot:hover {
+    transform: none;
+  }
+  .carousel-btn:hover,
+  .carousel-btn:active {
+    transform: translateY(-50%);
+  }
+}
+
+/* ---------- gatsby-plugin-image wrappers ----------
+   GatsbyImage renders a wrapper div around the <img>; these rules make the
+   wrapper take the size the layout expects. */
+.profile-pic.gatsby-image-wrapper {
+  display: block;
+  overflow: hidden;
+  border-radius: 50%;
+  isolation: isolate; /* keeps the circle clip on Safari during fade-in */
+}
+.projectImage.gatsby-image-wrapper,
+.featuredImage.gatsby-image-wrapper {
+  display: block;
+  overflow: hidden;
+}
+.carousel-container .gatsby-image-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* ---------- Section icons (replace emoji marginalia) ---------- */
+.h2-icon {
+  font-size: 0.8em;
+  vertical-align: -0.08em;
+  margin-right: 0.35em;
+  color: var(--color-primary-text);
+}
+.footer-heart {
+  vertical-align: -0.1em;
+  color: var(--color-primary-text);
+}
+
+/* ---------- Vertical slider (publications) ----------
+   A fixed-height box that scrolls on its own, so 27 publications don't
+   lengthen the page. Up/down buttons sit on the right above it; a fade at
+   the bottom says "there is more" until the end is reached. */
+.slider {
+  position: relative;
+}
+.slider-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.slider-btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  border: none;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color var(--dur-feedback) ease,
+    opacity var(--dur-feedback) ease;
+}
+.slider-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+}
+.slider-btn:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+.slider-track {
+  max-height: min(32rem, 70vh);
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scroll-snap-type: y proximity;
+  /* room for the hover lift and the focus ring inside the scroller;
+     scroll-padding keeps snapping aligned with it so the top is scrollTop 0 */
+  padding: 6px 10px 6px 2px;
+  scroll-padding-block: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-primary-text) transparent;
+}
+.slider--scrollable:not(.slider--at-end) .slider-track {
+  -webkit-mask-image: linear-gradient(to bottom, var(--color-text) 85%, transparent);
+  mask-image: linear-gradient(to bottom, var(--color-text) 85%, transparent);
+}
+.slider-track::-webkit-scrollbar {
+  width: 6px;
+}
+.slider-track::-webkit-scrollbar-thumb {
+  background: var(--color-primary-text);
+  border-radius: 4px;
+}
+.slider-track:focus-visible {
   outline-offset: 2px;
 }
 
-.carousel-dot:focus {
-  outline: 2px solid white;
-  outline-offset: 2px;
+.orcid-logo {
+  margin-left: 0.4em;
+  vertical-align: -0.05em;
+}
+
+/* ---------- Clickable cards ----------
+   Small project cards and the featured card lift on hover, so the whole card
+   is the link (stretched link). Featured project cards with a carousel keep
+   their buttons usable, so they don't pretend to be clickable: no lift. */
+.projectCard,
+.featuredCard {
+  position: relative;
+}
+.projectCard .projectTags a::after,
+.featuredCard .featuredTags a::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+}
+.projectCard:has(a:focus-visible),
+.featuredCard:has(a:focus-visible) {
+  outline: 2px solid var(--color-primary-text);
+  outline-offset: 3px;
+}
+.projectCard .projectTags a:focus-visible,
+.featuredCard .featuredTags a:focus-visible {
+  outline: none;
+}
+.projectTopCard:hover {
+  transform: none;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Hero facts line ---------- */
+.hero-facts {
+  margin: -4px 0 8px;
+  font-size: var(--text-body);
+  color: var(--color-text);
+  opacity: 0.85;
+  text-wrap: balance;
+}
+
+/* ---------- Closing invitation above the last contact buttons ---------- */
+.closingTitle {
+  display: block;
+  margin: 0 auto 16px;
+  padding: 0;
+  border: none;
+  background: none;
+  box-shadow: none;
+  font-size: var(--text-lead);
+  font-weight: 600;
+}
+
+/* ---------- Publications: the whole card is the link ---------- */
+.publications li.publication--link a::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+}
+.publications li.publication--link:has(a:focus-visible) {
+  outline: 2px solid var(--color-primary-text);
+  outline-offset: 3px;
+}
+.publications li.publication--link a:focus-visible {
+  outline: none;
+}
+
+/* ---------- Visually hidden, still announced ---------- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- Hero: one sentence on what he does ---------- */
+.hero-intro {
+  margin: 0 auto 12px;
+  max-width: 36rem;
+  font-size: var(--text-lead);
+  font-weight: 400;
+  text-align: center;
+  text-wrap: balance;
+}
+
+/* ---------- Project link icons ---------- */
+.projectContent a svg,
+.projectTopContent a svg,
+.featuredContent a svg {
+  font-size: 0.85em;
+  vertical-align: -0.1em;
+  margin-right: 0.2em;
+}
+
+/* Slider controls keep their place before the list loads, so nothing shifts. */
+.slider-controls--idle {
+  visibility: hidden;
+}
+
+/* The publication box keeps its full height while the list loads (no jump). */
+.publications:has(.publications-status) .slider-track {
+  min-height: min(32rem, 70vh);
+}
+
+/* Links stay at least 24 px tall (WCAG 2.5.8) whatever the pointer. */
+.hero-links a,
+.projectTags a,
+.projectTopTags a,
+.featuredTags a,
+.publications a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+}
+
+/* Phones: the publication list grows with its content and the page scrolls. */
+@media (max-width: 640px) {
+  .slider-track {
+    max-height: none;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .slider-controls {
+    display: none;
+  }
+}
+
+/* Phones: eight publications, then a link to the full list on ORCID. */
+.publications-more {
+  display: none;
+}
+@media (max-width: 640px) {
+  .publication--extra {
+    display: none;
+  }
+  .publications-more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+}
+
+/* Footer links are 44 px on touch screens, like the others. */
+@media (pointer: coarse) {
+  .footer a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
 }

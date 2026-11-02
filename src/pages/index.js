@@ -6,30 +6,25 @@ import "../styles/style.css";
 import {
   FaLinkedin,
   FaGithub,
-  FaFileAlt,
   FaOrcid,
-  FaRegNewspaper,
   FaRegFile,
   FaRegEnvelope,
   FaChevronLeft,
   FaChevronRight,
+  FaRegClock,
+  FaRegFolderOpen,
+  FaRegNewspaper,
+  FaHeart,
+  FaRegImage,
+  FaExternalLinkAlt,
+  FaFileAlt,
 } from "react-icons/fa";
-import fresque_sante_mentale_image from "../images/fresque_sante_mentale_image.jpg";
-import becomtech_image from "../images/becomtech_image.png";
-import becomtech_image2 from "../images/becomtech_image2.jpg";
-import becomtech_image3 from "../images/becomtech_image3.png";
-import these_image from "../images/these_image.jpg";
-import these_image2 from "../images/these_image2.jpg";
-import these_image3 from "../images/these_image3.jpg";
-import lantrn_image from "../images/lantrn_image.png";
-import rtisan_image from "../images/rtisan_image.png";
-import portfolio_image from "../images/portfolio_image.png";
-import respond_image from "../images/respond_image.png";
-import coverage_image from "../images/coverage_image.png";
-import tableau_species_tracker_image from "../images/tableau_species_tracker_image.png";
-import powerbi_dashboard_image from "../images/powerbi_dashboard_image.png";
-import meImage from "../images/me.jpeg";
-import { Link } from "gatsby";
+import tableau_species_tracker_link from "../images/tableau_species_tracker_link.png";
+import powerbi_dashboard_link from "../images/powerbi_dashboard_link.png";
+import { Link, useStaticQuery, graphql } from "gatsby";
+import { GatsbyImage } from "gatsby-plugin-image";
+import { useSiteImages } from "../components/useSiteImages";
+import ScrollSlider from "../components/ScrollSlider";
 
 // Composant Carrousel
 const ImageCarousel = ({ images, alt }) => {
@@ -51,38 +46,80 @@ const ImageCarousel = ({ images, alt }) => {
     setCurrentIndex(index);
   };
 
+  // Swipe: a mostly-horizontal drag of 40px or more changes photo;
+  // vertical drags are left to the page scroll.
+  const touchStart = React.useRef(null);
+  const onTouchStart = (e) => {
+    const t = e.touches[0];
+    touchStart.current = { x: t.clientX, y: t.clientY };
+  };
+  const onTouchEnd = (e) => {
+    if (!touchStart.current || images.length < 2) return;
+    const t = e.changedTouches[0];
+    const dx = t.clientX - touchStart.current.x;
+    const dy = t.clientY - touchStart.current.y;
+    touchStart.current = null;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    if (dx < 0) goToNext();
+    else goToPrevious();
+  };
+
+  const siteImages = useSiteImages();
+  const current = siteImages[images[currentIndex]]?.photo;
+
   return (
-    <div className="carousel-container">
-      <img
-        src={images[currentIndex]}
-        alt={`${alt} - ${currentIndex + 1}`}
-        className="projectTopImage"
-      />
+    <div
+      className="carousel-container"
+      onTouchStart={onTouchStart}
+      onTouchEnd={onTouchEnd}
+    >
+      {current && (
+        <GatsbyImage
+          key={images[currentIndex]}
+          image={current}
+          alt={
+            images.length > 1
+              ? `${alt}, photo ${currentIndex + 1} sur ${images.length}`
+              : alt
+          }
+          className="projectTopImage"
+          objectFit="cover"
+        />
+      )}
 
       {images.length > 1 && (
         <>
           <button
+            type="button"
             onClick={goToPrevious}
             className="carousel-btn carousel-btn-left"
+            aria-label={`Photo précédente (${alt})`}
           >
-            <FaChevronLeft />
+            <FaChevronLeft aria-hidden="true" />
           </button>
 
           <button
+            type="button"
             onClick={goToNext}
             className="carousel-btn carousel-btn-right"
+            aria-label={`Photo suivante (${alt})`}
           >
-            <FaChevronRight />
+            <FaChevronRight aria-hidden="true" />
           </button>
 
           <div className="carousel-indicators">
             {images.map((_, index) => (
               <button
+                type="button"
                 key={index}
                 onClick={() => goToSlide(index)}
                 className={`carousel-dot ${
                   currentIndex === index ? "active" : ""
                 }`}
+                aria-label={`Afficher la photo ${index + 1} sur ${
+                  images.length
+                }`}
+                aria-current={currentIndex === index ? "true" : undefined}
               />
             ))}
           </div>
@@ -91,6 +128,21 @@ const ImageCarousel = ({ images, alt }) => {
     </div>
   );
 };
+
+// Boutons de contact (haut et bas de page)
+const ContactButtons = ({ label }) => (
+  <div className="contactSection">
+    <a href="mailto:contact@irwinhecker.com" className="contactButton">
+      {label}
+    </a>
+    <a
+      href="mailto:contact@irwinhecker.com"
+      className="contactButton contactButton--secondary"
+    >
+      <FaRegEnvelope aria-hidden="true" /> contact@irwinhecker.com
+    </a>
+  </div>
+);
 
 // Liens pour ressources professionnelles
 const links = [
@@ -104,15 +156,20 @@ const links = [
     url: "https://github.com/ihecker",
     icon: <FaGithub />,
   },
+  {
+    text: "ORCID",
+    url: "https://orcid.org/0000-0002-5707-2799",
+    icon: <FaOrcid />,
+  },
 ];
 
 const featured = [
   {
     name: "Portfolio",
     description: "Le code derrière ce portfolio !",
-    image: portfolio_image,
+    image: "portfolio_image.png",
     link: "https://github.com/ihecker/portfolio-ih",
-    tags: ["ReactJS", "Développement"],
+    tags: ["Dev web", "React"],
   },
 ];
 
@@ -120,182 +177,255 @@ const projectsTop = [
   {
     name: "Fresque de la Santé Mentale Jeunes",
     description:
-      "Mobiliser l'intelligence collective pour aborder la santé mentale de manière générale et universelle",
-    images: [fresque_sante_mentale_image],
+      "Mobiliser l’intelligence collective pour aborder la santé mentale de manière générale et universelle",
+    images: ["fresque_sante_mentale_image.jpg"],
     link: "https://www.nightline.fr/la-fresque-de-la-sante-mentale",
-    tags: ["Formation", "Animation"],
+    tags: ["Formation", "Animation d’ateliers"],
   },
   {
     name: "JUMP IN TECH",
     description:
       "Réduire les inégalités de genre grâce à la programmation informatique",
-    images: [becomtech_image3, becomtech_image2, becomtech_image],
+    images: ["becomtech_image3.png", "becomtech_image2.jpg", "becomtech_image.png"],
     link: "https://becomtech.fr",
-    tags: ["Formation", "Animation"],
+    tags: ["Formation", "Animation d’ateliers"],
   },
   {
-    name: "Ma Thèse",
+    name: "Ma thèse de doctorat",
     description:
       "Rôle des difficultés économiques et sociales vis-à-vis de la santé mentale au cours de la pandémie de COVID-19",
-    images: [these_image, these_image2, these_image3],
+    images: ["these_image.jpg", "these_image2.jpg", "these_image3.jpg"],
     link: "https://theses.fr/2024SORUS387",
-    tags: ["Thèse", "Doctorat"],
+    tags: ["Recherche", "Biostatistiques"],
   },
 ];
 
 const projects = [
   {
     name: "lantrn",
-    description: "Mon package R !",
-    image: lantrn_image,
+    description: "Package R : des fonctions pour des workflows d’analyse plus efficaces",
+    image: "lantrn_image.png",
     link: "https://github.com/ihecker/lantrn",
-    tags: ["R", "Développement"],
+    tags: ["Dev R"],
   },
   {
     name: "ShinyRtisan",
-    description: "Mon application Shiny !",
-    image: rtisan_image,
+    description: "Application Shiny pour explorer les personnalisations de R/Shiny",
+    image: "rtisan_image.png",
     link: "https://ihecker.shinyapps.io/ShinyRtisan/",
-    tags: ["Shiny", "Développement"],
+    tags: ["Dev R", "Shiny"],
   },
   {
     name: "Projet RESPOND",
     description:
       "Réduire les problèmes de santé mentale liés à la pandémie de COVID-19",
-    image: respond_image,
+    image: "respond_image.png",
     link: "https://respond-project.eu/",
-    tags: ["R", "Coordination"],
+    tags: ["Data", "Coordination"],
   },
   {
     name: "Base de Données COVerAGE",
     description: "Base de données démographique mondiale du COVID-19",
-    image: coverage_image,
+    image: "coverage_image.png",
     link: "https://www.coverage-db.org/",
-    tags: ["R", "Gestion de données"],
+    tags: ["Data", "Gestion de données"],
   },
   {
-    name: "Exemple Dashboard Tableau",
-    description: "Suivi des espèces menacées et éteintes",
-    image: tableau_species_tracker_image,
-    link: "public/tableau_species_tracker_image.png",
-    tags: ["Tableau", "Visualisation"],
+    name: "Tableau de bord : espèces menacées",
+    description: "Capture d’écran : suivi des espèces menacées et éteintes",
+    image: "tableau_species_tracker_image.png",
+    link: tableau_species_tracker_link,
+    screenshot: true,
+    tags: ["Dataviz", "Tableau"],
   },
   {
-    name: "Exemple Dashboard PowerBI",
-    description: "Top 10 des pays par cas de COVID-19",
-    image: powerbi_dashboard_image,
-    link: "public/powerbi_dashboard_image.png",
-    tags: ["PowerBI", "Visualisation"],
+    name: "Tableau de bord Power BI : COVID-19",
+    description: "Capture d’écran : top 10 des pays par cas de COVID-19",
+    image: "powerbi_dashboard_image.png",
+    link: powerbi_dashboard_link,
+    screenshot: true,
+    tags: ["Dataviz", "Power BI"],
   },
 ];
 
+// Turn one ORCID work summary into what the list needs.
+// Returns null for malformed records instead of crashing the whole list.
+const safeHttpUrl = (value) => {
+  try {
+    const url = new URL(value);
+    return url.protocol === "https:" || url.protocol === "http:"
+      ? url.href
+      : null;
+  } catch {
+    return null;
+  }
+};
+// ORCID stores some journal names in capitals. Make them readable, keeping
+// the usual lower-case words of titles.
+const SMALL_WORDS = new Set(["of", "de", "du", "des", "la", "le", "les", "and", "et", "in", "on", "for", "the", "da", "di"]);
+const titleCase = (text) => {
+  if (!text || text !== text.toUpperCase()) return text;
+  return text
+    .toLowerCase()
+    .split(" ")
+    .map((word, i) =>
+      i > 0 && SMALL_WORDS.has(word) ? word : word.charAt(0).toUpperCase() + word.slice(1)
+    )
+    .join(" ");
+};
+const toPublication = (work) => {
+  const title = work?.title?.title?.value?.trim();
+  if (!title) return null;
+  const doi = work["external-ids"]?.["external-id"]?.find(
+    (id) => id["external-id-type"] === "doi"
+  )?.["external-id-value"];
+  return {
+    title,
+    journal: titleCase(work["journal-title"]?.value) || null,
+    year: work["publication-date"]?.year?.value || null,
+    url:
+      safeHttpUrl(work.url?.value) ||
+      (doi ? safeHttpUrl(`https://doi.org/${doi}`) : null),
+  };
+};
+
+// Small icon by destination, so the repeated "Voir le projet" links are
+// told apart at a glance. Decorative: the accessible name comes from the link.
+const projectIcon = (project) => {
+  if (project.screenshot) return <FaRegImage aria-hidden="true" />;
+  if (project.link.includes("github.com")) return <FaGithub aria-hidden="true" />;
+  if (project.link.includes("theses.fr")) return <FaFileAlt aria-hidden="true" />;
+  return <FaExternalLinkAlt aria-hidden="true" />;
+};
+
 const IndexPage = () => {
-  const [heights, setHeights] = useState([20, 20, 20, 20]);
+  const siteImages = useSiteImages();
+  // Build year comes from Gatsby's static data, so the server HTML and the
+  // client render always agree (no hydration mismatch on New Year's Day).
+  const { site } = useStaticQuery(graphql`
+    query {
+      site {
+        buildTime(formatString: "YYYY")
+      }
+    }
+  `);
   const [publications, setPublications] = useState([]);
-  const [index, setIndex] = useState(0);
-  const texts = [
-    "Passionné de données",
-    "Passionné de code",
-    "Passionné de science",
-  ];
+  // "loading" | "ready" | "error"
+  const [publicationsStatus, setPublicationsStatus] = useState("loading");
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      const newHeights = heights.map(() => Math.random() * 80 + 20);
-      setHeights(newHeights);
-    }, 3000);
-    return () => clearInterval(interval);
-  }, [heights]);
+    // Abort on unmount, and give up after 8 s so the loading state
+    // never hangs when ORCID is slow.
+    const controller = new AbortController();
+    let timedOut = false;
+    const timeout = setTimeout(() => {
+      timedOut = true;
+      controller.abort();
+    }, 8000);
 
-  useEffect(() => {
     const fetchPublications = async () => {
       try {
         const response = await fetch(
           "https://pub.orcid.org/v3.0/0000-0002-5707-2799/works",
-          { headers: { Accept: "application/json" } }
+          {
+            headers: { Accept: "application/json" },
+            signal: controller.signal,
+          }
         );
+        if (!response.ok) throw new Error(`ORCID ${response.status}`);
         const data = await response.json();
-        const works = data.group.map((group) => {
-          const work = group["work-summary"][0];
-          return {
-            title: work.title.title.value,
-            journal: work["journal-title"]?.value || "Inconnu",
-            year: work["publication-date"]?.year?.value || "Inconnu",
-            doi: work["url"]?.value || "Inconnu",
-          };
-        });
+        const works = (data.group || [])
+          .map((group) => toPublication(group?.["work-summary"]?.[0]))
+          .filter(Boolean)
+          .sort((a, b) => (Number(b.year) || 0) - (Number(a.year) || 0));
         setPublications(works);
+        setPublicationsStatus("ready");
       } catch (error) {
+        if (controller.signal.aborted && !timedOut) return; // unmounted
         console.error(
           "Erreur lors de la récupération des publications :",
           error
         );
+        setPublicationsStatus("error");
+      } finally {
+        clearTimeout(timeout);
       }
     };
     fetchPublications();
+    return () => {
+      clearTimeout(timeout);
+      controller.abort();
+    };
   }, []);
 
   return (
     <Layout>
       <header className="header">
-        <nav>
-          <Link to="/">💬FR🥖</Link>
-          <Link to="/en">💬EN🌍</Link>
+        <nav aria-label="Langue">
+          <Link
+            to="/"
+            hrefLang="fr" lang="fr"
+            onClick={() => (document.documentElement.lang = "fr")}
+            aria-current="page"
+          >
+            FR
+          </Link>
+          <Link to="/en/" hrefLang="en" lang="en"
+            onClick={() => (document.documentElement.lang = "en")}>
+            EN
+          </Link>
         </nav>
       </header>
       <div className="main-content">
         <div className="textCenter">
-          <div className="title-container">
-            <h1 className="title">Portfolio</h1>
-            <div className="bar-chart">
-              {heights.map((height, index) => (
-                <div
-                  key={index}
-                  className="bar"
-                  style={{ height: `${height}%` }}
-                ></div>
-              ))}
-            </div>
-          </div>
-
-          <p className="intro">
-            <img src={meImage} alt="Irwin Hecker" className="profile-pic" />
-            <h1>Irwin Hecker</h1>
-            <p className="intro">
-              <span className="typing-effect">Données | Code | Science</span>
+          <section className="hero" aria-labelledby="hero-name">
+            <GatsbyImage
+              image={siteImages["me.jpeg"].avatar}
+              alt=""
+              className="profile-pic"
+              loading="eager"
+            />
+            <h1 id="hero-name">Irwin Hecker</h1>
+            <p className="hero-tagline">
+              <span
+                className="typing-effect"
+                style={{ "--typing-steps": 34 }}
+              >
+                Données | Code | Science | Société
+              </span>
             </p>
-          </p>
+            <p className="hero-facts">Développeur full-stack &amp; data · Docteur en biostatistiques · Basé à Nantes</p>
+            <p className="hero-intro">Je rends les données et la science compréhensibles,<br />en ateliers comme en code.</p>
 
-          <p className="intro">
-            {links.map((link, i) => (
-              <React.Fragment key={link.url}>
-                <a href={link.url} className="link">
-                  {link.icon} {link.text}
-                </a>
-                {i !== links.length - 1 && <> · </>}
-              </React.Fragment>
-            ))}
-          </p>
+            <ContactButtons label="Contactez-moi !" />
 
-          <div className="contactSection">
-            <a href="mailto:contact@irwinhecker.com" className="contactButton">
-              Contactez moi !
-            </a>
-            <a href="mailto:contact@irwinhecker.com" className="contactButton">
-              <FaRegEnvelope />
-            </a>
-          </div>
+            <p className="hero-links">
+              {links.map((link, i) => (
+                <React.Fragment key={link.url}>
+                  <a href={link.url} className="link">
+                    {link.icon} {link.text}
+                  </a>
+                  {i !== links.length - 1 && <> · </>}
+                </React.Fragment>
+              ))}
+            </p>
+          </section>
 
-          <div className="projectsTitle">
-            <h2>⏲️Projets en cours⏲️</h2>
+          <section className="projectsTitle">
+            <h2>
+              <FaRegClock className="h2-icon" aria-hidden="true" />
+              Projets en cours
+            </h2>
 
             <div className="featuredGrid">
               {featured.map((project, index) => (
                 <div key={index} className="featuredCard">
-                  <img
-                    src={project.image}
-                    alt={project.name}
+                  <GatsbyImage
+                    image={siteImages[project.image].wide}
+                    alt=""
                     className="featuredImage"
+                    objectFit="cover"
+                    loading="eager"
                   />
                   <div className="featuredContent">
                     <h3>{project.name}</h3>
@@ -305,8 +435,9 @@ const IndexPage = () => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`${project.cta || "Voir le projet"} ${project.name} (${project.screenshot ? "image, " : ""}nouvel onglet)`}
                       >
-                        Voir le projet
+                        {projectIcon(project)}{" "}{project.cta || "Voir le projet"}
                       </a>
                     </div>
                     <div className="tagsContainer">
@@ -320,10 +451,13 @@ const IndexPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="projectsTitle">
-            <h2>🚀Projets🚀</h2>
+          <section className="projectsTitle">
+            <h2>
+              <FaRegFolderOpen className="h2-icon" aria-hidden="true" />
+              Projets
+            </h2>
 
             <div className="projectsTopGrid">
               {projectsTop.map((project, index) => (
@@ -337,8 +471,9 @@ const IndexPage = () => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`${project.cta || "Voir le projet"} ${project.name} (${project.screenshot ? "image, " : ""}nouvel onglet)`}
                       >
-                        Voir le projet
+                        {projectIcon(project)}{" "}{project.cta || "Voir le projet"}
                       </a>
                     </div>
                     <div className="tagsContainer">
@@ -356,10 +491,11 @@ const IndexPage = () => {
             <div className="projectsGrid">
               {projects.map((project, index) => (
                 <div key={index} className="projectCard">
-                  <img
-                    src={project.image}
-                    alt={project.name}
+                  <GatsbyImage
+                    image={siteImages[project.image].card}
+                    alt=""
                     className="projectImage"
+                    objectFit="cover"
                   />
                   <div className="projectContent">
                     <h3>{project.name}</h3>
@@ -369,8 +505,9 @@ const IndexPage = () => {
                         href={project.link}
                         target="_blank"
                         rel="noopener noreferrer"
+                        aria-label={`${project.cta || "Voir le projet"} ${project.name} (${project.screenshot ? "image, " : ""}nouvel onglet)`}
                       >
-                        Voir le projet
+                        {projectIcon(project)}{" "}{project.cta || "Voir le projet"}
                       </a>
                     </div>
                     <div className="tagsContainer">
@@ -384,44 +521,109 @@ const IndexPage = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </section>
 
-          <div className="publicationsTitle">
+          <section className="publicationsTitle">
             <h2>
-              📰Publications scientifiques📰
-              <a
-                href="https://orcid.org/0000-0002-5707-2799"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="orcid-logo"
-              >
-                <FaOrcid />
-              </a>
+              <FaRegNewspaper className="h2-icon" aria-hidden="true" />
+              Publications scientifiques
             </h2>
+            <p className="sr-only" role="status">
+              {publicationsStatus === "error" && "Les publications n’ont pas pu être chargées depuis ORCID."}
+              {publicationsStatus === "ready" &&
+                `${publications.length} publications chargées depuis ORCID.`}
+            </p>
             <div className="publications">
+              <ScrollSlider
+                label="Publications scientifiques, défilement vertical"
+                prevLabel="Publications précédentes"
+                nextLabel="Publications suivantes"
+                contentKey={`${publicationsStatus}-${publications.length}`}
+              >
               <ul>
-                {publications.length > 0 ? (
-                  publications.map((pub, index) => (
-                    <li key={index}>
-                      <a href={pub.doi}>
-                        <FaRegFile style={{ marginRight: "8px" }} />{" "}
-                        <strong>{pub.title}</strong>
-                      </a>{" "}
-                      ({pub.year}) - {pub.journal}
-                    </li>
-                  ))
-                ) : (
-                  <li>Aucune publication trouvée.</li>
+                {publicationsStatus === "loading" && (
+                  <li className="publications-status">Chargement des publications depuis ORCID…</li>
                 )}
+                {publicationsStatus === "error" && (
+                  <li className="publications-status">
+                    Les publications n’ont pas pu être chargées depuis ORCID.
+                    Vous pouvez les consulter directement sur{" "}
+                    <a
+                      href="https://orcid.org/0000-0002-5707-2799"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      mon profil ORCID
+                    </a>
+                    .
+                  </li>
+                )}
+                {publicationsStatus === "ready" &&
+                  publications.length === 0 && (
+                    <li className="publications-status">Aucune publication n’est encore répertoriée sur ORCID.</li>
+                  )}
+                {publicationsStatus === "ready" &&
+                  publications.map((pub, index) => {
+                    const details = [pub.year, pub.journal]
+                      .filter(Boolean)
+                      .join(" · ");
+                    const title = (
+                      <>
+                        <FaRegFile
+                          aria-hidden="true"
+                          style={{ marginRight: "8px" }}
+                        />{" "}
+                        <strong>{pub.title}</strong>
+                      </>
+                    );
+                    return (
+                      <li
+                        key={index}
+                        className={[pub.url ? "publication--link" : null, index >= 8 ? "publication--extra" : null].filter(Boolean).join(" ") || undefined}
+                      >
+                        {pub.url ? (
+                          <a
+                            href={pub.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label={`${pub.title} (nouvel onglet)`}
+                          >
+                            {title}
+                          </a>
+                        ) : (
+                          title
+                        )}
+                        {details && <> {details}</>}
+                      </li>
+                    );
+                  })}
               </ul>
+              </ScrollSlider>
+            <a
+              href="https://orcid.org/0000-0002-5707-2799"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="publications-more"
+              aria-label="Voir toutes les publications sur ORCID (nouvel onglet)"
+            >
+              Voir toutes les publications sur ORCID
+            </a>
             </div>
-          </div>
+          </section>
+
+          <section className="closingContact" aria-labelledby="closing-title">
+            <h2 id="closing-title" className="closingTitle">
+              Un projet de données, d’outil, d’atelier ou de formation ? Parlons-en.
+            </h2>
+            <ContactButtons label="Contactez-moi !" />
+          </section>
         </div>
       </div>
 
       <footer className="footer">
         <p>
-          © {new Date().getFullYear()} Irwin Hecker. Fait avec ❤️ et{" "}
+          © {site.buildTime} Irwin Hecker. Fait avec{" "}
+          <FaHeart className="footer-heart" role="img" aria-label="amour" /> et{" "}
           <a href="https://www.gatsbyjs.com">Gatsby</a>.
         </p>
       </footer>
@@ -429,6 +631,11 @@ const IndexPage = () => {
   );
 };
 
-export const Head = () => <Seo title="Accueil" />;
+export const Head = () => (
+  <Seo
+    title="Accueil"
+    description="Irwin Hecker, développeur full-stack & data, docteur en biostatistiques, basé à Nantes. Projets, publications scientifiques et contact."
+  />
+);
 
 export default IndexPage;

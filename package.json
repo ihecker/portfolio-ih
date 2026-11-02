@@ -5,6 +5,8 @@
   "version": "0.1.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
+    "@fontsource-variable/open-sans": "^5.1.0",
+    "@fontsource/poppins": "^5.1.0",
     "gatsby": "^5.14.1",
     "gatsby-plugin-image": "^3.14.0",
     "gatsby-plugin-manifest": "^5.14.0",
@@ -38,5 +40,8 @@
   },
   "bugs": {
     "url": "https://github.com/gatsbyjs/gatsby/issues"
+  },
+  "overrides": {
+    "msgpackr": "^1.11.2"
   }
 }

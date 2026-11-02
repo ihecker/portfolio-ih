@@ -7,6 +7,7 @@
 /**
  * @type {import('gatsby').GatsbySSR['onRenderBody']}
  */
-exports.onRenderBody = ({ setHtmlAttributes }) => {
-  setHtmlAttributes({ lang: `en` })
+exports.onRenderBody = ({ pathname, setHtmlAttributes }) => {
+  const isEnglish = pathname === `/en` || pathname.startsWith(`/en/`)
+  setHtmlAttributes({ lang: isEnglish ? `en` : `fr` })
 }

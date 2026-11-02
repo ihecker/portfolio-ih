@@ -10,9 +10,9 @@
 module.exports = {
   siteMetadata: {
     title: `Irwin Hecker | Portfolio`,
-    description: ``,
+    description: `Irwin Hecker : données, code et science. Projets, publications scientifiques et contact.`,
     author: `@ihecker`,
-    siteUrl: `https://gatsbystarterdefaultsource.gatsbyjs.io/`,
+    siteUrl: `https://irwinhecker.com`,
   },
   plugins: [
     `gatsby-plugin-image`,
@@ -28,13 +28,11 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `gatsby-starter-default`,
-        short_name: `starter`,
+        name: `Irwin Hecker | Portfolio`,
+        short_name: `Irwin Hecker`,
         start_url: `/`,
-        background_color: `#663399`,
-        // This will impact how browsers show your PWA/website
-        // https://css-tricks.com/meta-theme-color-and-trickery/
-        // theme_color: `#663399`,
+        background_color: `#1b263b`,
+        theme_color: `#1b263b`,
         display: `minimal-ui`,
         icon: `src/images/favicon.png`, // This path is relative to the root of the site.
       },
